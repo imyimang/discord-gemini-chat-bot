@@ -76,7 +76,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")
-            return
+            return #返回,不繼續執行下面指令
 
     # 就是print出來訊息的詳細資料 可以不用加
     #==========================================
