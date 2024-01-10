@@ -20,7 +20,7 @@
 
 
 # 常見問題
-## 如何取得gemini api key
+### 如何取得gemini api key
 1.前往gemini的網站 [**點我**](<https://makersuite.google.com/>)
 
 2.登入你的google帳號(要帳戶年滿18歲) [**詳情點我**](<https://ai.google.dev/available_regions?hl=zh-tw>)
@@ -37,7 +37,7 @@
 6.這樣就得到api key囉 點copy就能複製
 ![圖4](https://media.discordapp.net/attachments/1128696283276783688/1194676224111431831/image.png?ex=65b137ef&is=659ec2ef&hm=8cc21d0ecdf0d428d8d15d052e8494c1597808ecda401848db788ed4c1ba461a&=&format=webp&quality=lossless&width=1081&height=570)
 
-## 如何產生訓練prompt
+### 如何產生訓練prompt
 1.前往gemini的網站 [**點我**](<https://makersuite.google.com/>)
 
 2.點create new,然後選Chat prompt
