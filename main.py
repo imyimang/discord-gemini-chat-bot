@@ -72,6 +72,11 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     t = random.randint(0, 2)  #讓機器人隨機停頓0~2秒後再之行下面(這兩行可以不用)
     await asyncio.sleep(t)
 
+    if msg.content.lower() == "reset": #如果訊息內容="reset"
+        if msg.author.id in log:
+            del log[msg.author.id] #清空短期記憶
+            await msg.reply("您的短期記憶已清空")
+            return
 
     # 就是print出來訊息的詳細資料 可以不用加
     #==========================================
@@ -130,7 +135,7 @@ def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
     else:
-        return  #如果user_id不在字典裡就返回
+        return "安安" #如果user_id不在字典裡就返回這行(可更改)
 
     
 bot.run("your token")   #放入你的discord bot token
