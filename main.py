@@ -104,7 +104,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     dt1 = datetime.utcnow().replace(tzinfo=timezone.utc) 
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  #定義一個時間變數(寫message log用的,如果沒有要用message log可以不用這兩行)
 
-   update_message_history(msg.author.id, dc_msg) #將dc_msg(就是使用者發送的訊息)上傳到短期記憶
+    update_message_history(msg.author.id, dc_msg) #將dc_msg(就是使用者發送的訊息)上傳到短期記憶
 
     reply_text = await history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
 
