@@ -1,18 +1,13 @@
-import os
+
 import re
-import time
 from datetime import datetime,timezone,timedelta
-import aiohttp
 import discord
 import google.generativeai as genai
 from discord.ext import commands
 import asyncio
 import random
 import json
-import os.path
 from Def import history #從Def.py導入history副函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
-
-
 
 #如果你想要看懂整個程式
 #建議去科普一下json檔,python字典,python副函式的運作原理
@@ -20,21 +15,14 @@ from Def import history #從Def.py導入history副函式(主要是我不想要�
 
 log = {} #創建一個名稱叫log的字典 用來存放短期記憶
 
-
-
-
-
-
 bot = commands.Bot(command_prefix="*", intents=discord.Intents.all()) #設定discord bot,prefix可以自己改
 
 
 @bot.event
 async def on_message(msg):   #如果有訊息發送就會觸發
    
-
     if msg.author == bot.user:   #如果訊息發送者是自己就不再執行下面的程式
         return
-    
     if isinstance(msg.channel, discord.TextChannel):   #如果訊息在文字頻道就執行下面
       can_send = msg.channel.permissions_for(msg.guild.me).send_messages   #can_send用來檢查頻道是否有發言權限
       if bool(can_send) != True:   #如果機器人沒有發言權限就不執行下面程式
@@ -58,8 +46,6 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         with open('channel.json', 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
         return 
-    
-
 
     if msg.content == "blockchannel":  #如果訊息內容="blockchannel"就執行下面
        channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
@@ -76,7 +62,6 @@ async def on_message(msg):   #如果有訊息發送就會觸發
        await msg.reply("頻道已成功屏蔽")
        return
     
-    
     channel_id = str(msg.channel.id) #定義變數channel_id
     with open('channel.json', 'r', encoding='utf-8') as file:
         data = json.load(file)  #開啟json檔
@@ -84,9 +69,6 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     if channel_id in channel_list:  #如果頻道id在json檔裡面
         return #就不執行下面程式
     
-    
-    
-
     t = random.randint(0, 2)  #讓機器人隨機停頓0~2秒後再之行下面(這兩行可以不用)
     await asyncio.sleep(t)
 
@@ -104,11 +86,10 @@ async def on_message(msg):   #如果有訊息發送就會觸發
       print(f"Channel id: {msg.channel.id}")
     #==========================================
     
-
     dt1 = datetime.utcnow().replace(tzinfo=timezone.utc) 
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  #定義一個時間變數(寫message log用的,如果沒有要用message log可以不用這兩行)
 
-    reply_text = history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
+    reply_text = await history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
 
     await msg.reply(reply_text)  #將api的回應回傳給使用者
 
