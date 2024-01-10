@@ -35,15 +35,14 @@ model = genai.GenerativeModel(model_name="gemini-pro",
                               generation_config=generation_config,
                               safety_settings=safety_settings) #設定模型 這邊不用動他
 
-
-
-def history(msg): #建立一個副函式
-    
-    convo = model.start_chat(history=[
+convo = model.start_chat(history=[
  # 這裡放你的prompt
 ])
-    
-    convo.send_message(msg) #傳送msg內容給gemini api
+
+async def history(msg): #建立一個副函式
+    global convo #定義convo為全域變數
+        
+    await convo.send_message_async(msg) #傳送msg內容給gemini api
     print(f":{convo.last.text}") #print出api的回應(可省略)
     reply_text = convo.last.text 
     return reply_text #將api的回應返還給主程式
