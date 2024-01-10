@@ -1,3 +1,18 @@
+# 介紹
+這是一個利用google開發的gemini模型的api來連接discord機器人的Chat bot
+## 指令
+**以下所有指令都不需要任何prefix或mention**
+* blockchannel ➡️ 不再接收當前頻道的訊息(封鎖頻道)
+* unblockchannel ➡️ 解除當前頻道的封鎖
+* reset ➡️ 清除該用戶的短期記憶
+## 注意事項
+*這個版本是每則訊息都會回覆, 不需要mention。所以一次太多訊息他會卡住*
+*blockchannel和unblockchannel指令需要等他處理完前面堆積的api請求才會執行*
+*每個用戶的短期記憶是分開的,reset只會清空當前使用指令的用戶的短期記憶*
+*短期記憶的上限包含機器人的回覆*
+
+
+# 常見問題
 ## 如何取得gemini api key
 1.前往gemini的網站 [**點我**](<https://makersuite.google.com/>)
 
