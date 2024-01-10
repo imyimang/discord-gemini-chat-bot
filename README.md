@@ -65,9 +65,10 @@
 
 6.回到Def.py
 
-![圖11](https://media.discordapp.net/attachments/1141922914178977946/1194681305082900480/image.png?ex=65b13cab&is=659ec7ab&hm=b17ce7b59c3ab113e0a8d399a347bbc2d208bcc5bf9eb3fac4dc3518584e210d&=&format=webp&quality=lossless&width=722&height=662)
+![圖11](https://media.discordapp.net/attachments/1141922914178977946/1194693909532659813/image.png?ex=65b14868&is=659ed368&hm=002956110a0db9196c47fc5a113100235015ead332e76e3a0cf8831a0fd33a86&=&format=webp&quality=lossless&width=1088&height=662)
 
 把框起來的那段換成自己的prompt就可以囉
 
-![圖12](https://media.discordapp.net/attachments/1141922914178977946/1194681593520984184/image.png?ex=65b13cf0&is=659ec7f0&hm=7adb953e49323047878352ebd19c206eeab0181272cbbd524c0e68334bd28eb6&=&format=webp&quality=lossless&width=722&height=662)
+![圖12](https://media.discordapp.net/attachments/1141922914178977946/1194694334709239858/image.png?ex=65b148cd&is=659ed3cd&hm=f7d67816f2cf8ac10e07f255a52c325499b77b8d631c81084b48286ff2c71517&=&format=webp&quality=lossless&width=1140&height=662)
+
 
