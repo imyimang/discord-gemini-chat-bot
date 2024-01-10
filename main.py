@@ -139,7 +139,7 @@ def update_message_history(user_id, text): #定義update_message_history副函�
 def clean_discord_message(input_string): #刪除 Discord 聊天訊息中位於 < 和 > 之間的文字(讓他能夠放入短期記憶並被ai讀懂)
     bracket_pattern = re.compile(r'<[^>]+>')
     cleaned_content = bracket_pattern.sub('', input_string)
-    return cleaned_content
+    return cleaned_content  #返回更改格式後的字串
     
 def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
