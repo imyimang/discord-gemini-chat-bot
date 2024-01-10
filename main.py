@@ -72,7 +72,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     t = random.randint(0, 2)  #讓機器人隨機停頓0~2秒後再之行下面(這兩行可以不用)
     await asyncio.sleep(t)
 
-    if msg.content.lower() == "reset": #如果訊息內容="reset"
+    if msg.content.lower() == "reset" or msg.content == "reset": #如果訊息內容="reset"
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")
