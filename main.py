@@ -130,7 +130,7 @@ def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
     else:
-        return "這位使用者並沒有任何歷史紀錄" #如果user_id不在字典裡就返回這行
+        return  #如果user_id不在字典裡就返回
 
     
 bot.run("your token")   #放入你的discord bot token
