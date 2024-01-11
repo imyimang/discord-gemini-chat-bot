@@ -113,6 +113,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     dc_msg = clean_discord_message(msg.content) #將訊息內容放入clean_discord_message(下面會講),簡單來說就是更改訊息的格式,然後把回傳結果放入dc_msg變數
  
     update_message_history(msg.author.id, dc_msg) #將dc_msg(就是使用者發送的訊息)上傳到短期記憶
+
     if msg.author.id in log:
         reply_text = await history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
     else:
@@ -155,8 +156,7 @@ def clean_discord_message(input_string): #刪除 Discord 聊天訊息中位於 <
 def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
-    else:
-        return "安安" #如果user_id不在字典裡就返回這行(可更改)
+
 
     
 bot.run("your token")   #放入你的discord bot token
