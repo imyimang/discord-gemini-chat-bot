@@ -118,7 +118,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 
     await msg.reply(reply_text)  #將api的回應回傳給使用者
 
-    update_message_history(msg.author.id, clean_discord_message(reply_text)) #將api的回應上傳到短期記憶
+    update_message_history(msg.author.id, reply_text) #將api的回應上傳到短期記憶
 
 
 #下面是message log,沒有需要可以不用加
