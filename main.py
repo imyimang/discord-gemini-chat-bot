@@ -128,6 +128,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     f.write(f"\nAI回應:\n{reply_text}\n")
     #==========================================
       
+    await bot.process_commands(msg)
 
       
 def update_message_history(user_id, text): #定義update_message_history副函式
