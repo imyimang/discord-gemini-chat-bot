@@ -78,15 +78,20 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     channel_list = data.get("id", [])
     if channel_id in channel_list:  #如果頻道id在json檔裡面
         return #就不執行下面程式
-    
-    t = random.randint(0, 2)  #讓機器人隨機停頓0~2秒後再之行下面(這兩行可以不用)
-    await asyncio.sleep(t)
 
     if msg.content.lower() == "reset" or msg.content == "reset": #如果訊息內容="reset"
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")
             return #返回,不繼續執行下面指令
+        else:
+            await msg.reply("並無儲存的短期記憶")
+
+
+    t = random.randint(0, 2)  #讓機器人隨機停頓0~2秒後再之行下面(這兩行可以不用)
+    await asyncio.sleep(t)
+
+
 
     # 就是print出來訊息的詳細資料 可以不用加
     #==========================================
