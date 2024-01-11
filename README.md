@@ -72,3 +72,11 @@
 ![圖12](https://media.discordapp.net/attachments/1141922914178977946/1194694334709239858/image.png?ex=65b148cd&is=659ed3cd&hm=f7d67816f2cf8ac10e07f255a52c325499b77b8d631c81084b48286ff2c71517&=&format=webp&quality=lossless&width=1140&height=662)
 
 
+## The caller does not have permisson
+當你點擊創建api key的時候,可能會出現下面的錯誤
+![圖13](https://media.discordapp.net/attachments/1141922914178977946/1194873264883892274/image.png?ex=65b1ef72&is=659f7a72&hm=92f15571007a5cde99e807d45ddbd118fb05762539e0f4f0fad04bfefbaff9aa&=&format=webp&quality=lossless&width=1017&height=662)
+這可能是由於你刪除了你的前一個api key
+
+這種情況建議用另一個沒創過api key的帳號
+
+重新創建一個api key
