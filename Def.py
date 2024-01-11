@@ -40,7 +40,7 @@ convo = model.start_chat(history=[
 ])
 
 async def history(msg): #建立一個副函式
-    global convo #定義convo為全域變數
+
         
     await convo.send_message_async(msg) #傳送msg內容給gemini api
     print(f":{convo.last.text}") #print出api的回應(可省略)
