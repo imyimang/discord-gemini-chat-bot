@@ -23,7 +23,7 @@
 ## 我想要把channel.json改成頻道白名單而不是黑名單怎麼辦
 如果想要讓機器人只會回覆channel.json裡面的頻道的訊息,而不是封鎖裡面的頻道
 
-請解壓縮檔案中的**main_whitelist.py**,裡面就是白名單版本的main.py
+請**解壓縮**專案中的**main_whitelist.zip**,裡面就是白名單版本的main.py
 
 Def.py無須更改
 
