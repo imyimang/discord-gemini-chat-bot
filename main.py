@@ -86,6 +86,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
             return #返回,不繼續執行下面指令
         else:
             await msg.reply("並無儲存的短期記憶")
+            return
 
 
     t = random.randint(0, 2)  #讓機器人隨機停頓0~2秒後再之行下面(這兩行可以不用)
