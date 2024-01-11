@@ -1,6 +1,7 @@
 
 import os
 import re
+import sys
 from datetime import datetime,timezone,timedelta
 import discord
 import google.generativeai as genai
@@ -83,10 +84,12 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")
-            return #返回,不繼續執行下面指令
+           
         else:
             await msg.reply("並無儲存的短期記憶")
-            return
+            
+        restart() #用restart函式來重新載入python專案
+        return
 
 
     t = random.randint(0, 2)  #讓機器人隨機停頓0~2秒後再之行下面(這兩行可以不用)
@@ -117,7 +120,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     if msg.author.id in log:
         reply_text = await history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
     else:
-        reply_text = await history(msg)    
+        reply_text = await history(msg)    #如果使用者沒有歷史紀錄就直接把訊息發給api
 
     await msg.reply(reply_text)  #將api的回應回傳給使用者
 
@@ -156,6 +159,9 @@ def clean_discord_message(input_string): #刪除 Discord 聊天訊息中位於 <
 def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
+    
+def restart(): 
+  os.execv(sys.executable, ['python'] + sys.argv)
 
 
     
