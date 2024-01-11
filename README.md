@@ -2,6 +2,8 @@
 這是一個利用google開發的gemini模型的api來連接discord機器人的Chat bot
 ## 指令
 **以下所有指令都不需要任何prefix或mention**
+
+*注意:以下指令都沒有設定任何權限限制,任何人都能使用*
 * blockchannel ➡️ 不再接收當前頻道的訊息(封鎖頻道)
 * unblockchannel ➡️ 解除當前頻道的封鎖
 * reset ➡️ 清除該用戶的短期記憶
