@@ -1,4 +1,3 @@
-
 import os
 import re
 from datetime import datetime,timezone,timedelta
@@ -80,8 +79,8 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         await msg.reply("頻道已成功屏蔽")
         return
        else:
-           await msg.reply("請在伺服器中使用此指令")
-           return
+            await msg.reply("請在伺服器中使用此指令")
+            return
        
     
 
@@ -203,6 +202,7 @@ def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
     
+
 
 
 
