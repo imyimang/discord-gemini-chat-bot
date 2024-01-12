@@ -1,13 +1,10 @@
 
 import os
 import re
-import sys
 from datetime import datetime,timezone,timedelta
 import discord
 import google.generativeai as genai
 from discord.ext import commands
-import asyncio
-import random
 import json
 from Def import history #從Def.py導入history副函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
 from Def import restart #導入restart函式
