@@ -1,9 +1,11 @@
 # 介紹
 這是一個利用google開發的gemini模型的api來連接discord機器人的Chat bot
+具有黑白名單兩種模式
 ## 指令
 **以下所有指令都不需要任何prefix或mention**
 
 *注意:以下指令都沒有設定任何權限限制,任何人都能使用*
+
 * blockchannel ➡️ 不再接收當前頻道的訊息(封鎖頻道)
 * unblockchannel ➡️ 解除當前頻道的封鎖
 * reset ➡️ 清除該用戶的短期記憶
@@ -25,7 +27,7 @@
 ## 我想要把channel.json改成頻道白名單而不是黑名單怎麼辦
 如果想要讓機器人只會回覆channel.json裡面的頻道的訊息,而不是封鎖裡面的頻道
 
-請**解壓縮**專案中的**main_whitelist.zip**,裡面就是白名單版本的main.py
+請使用專案中的**main_whitelist.py**
 
 Def.py無須更改
 
@@ -36,7 +38,7 @@ Def.py無須更改
 * closechannel ➡️ 將當前頻道移出白名單
 * 其他指令和原版相同
 
-[單獨下載檔案點我](main_whitelist.zip)
+
 
 ## 如何取得gemini api key
 1.前往gemini的網站 [**點我**](<https://makersuite.google.com/>)
