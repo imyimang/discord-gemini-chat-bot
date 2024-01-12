@@ -30,48 +30,55 @@ async def on_message(msg):   #如果有訊息發送就會觸發
           return
     
     if msg.content == "unblockchannel":   #如果訊息內容="unblockchannel"就執行下面
-        channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
-        with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
-        
-        #此處的json檔就是黑名單列表的概念
+        if isinstance(msg.channel, discord.TextChannel):
+            channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
+            with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
+            
+            #此處的json檔就是黑名單列表的概念
 
-            data = json.load(file)   #定義data為json檔案裡面讀到的資料
-        channel_list = data.get("id", [])   #定義channel_list為json裡面鍵值為"id"的資料,如果沒有這個資料就返回空的列表
-        
-        if str(msg.channel.id) in channel_list: #如果channel id在channel_list裡面(因為這個json檔只有存一個鍵值,所以基本上就是在json檔裡面的意思)
-            channel_list.remove(channel_id)   #從json檔裡面移除channel_id(就是頻道id)這個資料
-            await msg.reply("頻道已解除屏蔽")
+                data = json.load(file)   #定義data為json檔案裡面讀到的資料
+            channel_list = data.get("id", [])   #定義channel_list為json裡面鍵值為"id"的資料,如果沒有這個資料就返回空的列表
+            
+            if str(msg.channel.id) in channel_list: #如果channel id在channel_list裡面(因為這個json檔只有存一個鍵值,所以基本上就是在json檔裡面的意思)
+                channel_list.remove(channel_id)   #從json檔裡面移除channel_id(就是頻道id)這個資料
+                await msg.reply("頻道已解除屏蔽")
 
-        data["id"] = channel_list
-        with open('channel.json', 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
-        return 
+            data["id"] = channel_list
+            with open('channel.json', 'w', encoding='utf-8') as file:
+                json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
+            return 
+        else:
+            msg.reply("請在伺服器中使用此指令")
 
     if msg.content == "blockchannel":  #如果訊息內容="blockchannel"就執行下面
-       channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
+       if isinstance(msg.channel, discord.TextChannel):
+        channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
+        
+        path = os.path.abspath(f'channel.json')
+        if os.path.exists(path):                     #檢查channel.json是否存在,如果存在就執行下面
+                with open('channel.json', 'r', encoding='utf-8') as file:
+                    data = json.load(file)  #打開json檔
+                channel_list = data.get("id", [])  #定義channel_list為json檔裡面的資料
+
+        else:  #如果channel.json不存在
+                data = {}
+                with open("channel.json", "w") as json_file: #建立一個空白的channel.json
+                    json.dump(data, json_file)
+                    data = json.load(json_file)
+                channel_list = data.get("id", []) #定義channel_list 下面會用到
+
+        if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
+            await msg.reply("該頻道已被屏蔽")
+            return
+        channel_list.append(channel_id)  #如果json裡面沒有此頻道id,就把此頻道id加入json檔
+        data["id"] = channel_list
+        with open('channel.json', 'w', encoding='utf-8') as file:
+                json.dump(data, file, ensure_ascii=False, indent=2)  #儲存變更
+        await msg.reply("頻道已成功屏蔽")
+        return
+       else:
+           msg.reply("請在伺服器中使用此指令")
        
-       path = os.path.abspath(f'channel.json')
-       if os.path.exists(path):                     #檢查channel.json是否存在,如果存在就執行下面
-            with open('channel.json', 'r', encoding='utf-8') as file:
-                data = json.load(file)  #打開json檔
-            channel_list = data.get("id", [])  #定義channel_list為json檔裡面的資料
-
-       else:  #如果channel.json不存在
-            data = {}
-            with open("channel.json", "w") as json_file: #建立一個空白的channel.json
-                json.dump(data, json_file)
-                data = json.load(json_file)
-            channel_list = data.get("id", []) #定義channel_list 下面會用到
-
-       if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
-           await msg.reply("該頻道已被屏蔽")
-           return
-       channel_list.append(channel_id)  #如果json裡面沒有此頻道id,就把此頻道id加入json檔
-       data["id"] = channel_list
-       with open('channel.json', 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=2)  #儲存變更
-       await msg.reply("頻道已成功屏蔽")
-       return
     
 
     if msg.content == "blockserver":
@@ -92,14 +99,14 @@ async def on_message(msg):   #如果有訊息發送就會觸發
                 if str(channel.id) not in channel_list:
                     channel_list.append(str(channel.id))  #將伺服器所有的頻道id輸入到json中
 
-            with open('channel.json', 'w', encoding='utf-8') as json_file: #儲存變更
+            with open('channel.json', 'w', encoding='utf-8') as json_file:
                 json.dump({"id": channel_list}, json_file, indent=2)
 
             await msg.reply("已封鎖此伺服器所有頻道")
             print(f"已封鎖此 {msg.guild.name} 上所有頻道")
             return
         else:
-            print("請在伺服器中使用此指令")
+            msg.reply("請在伺服器中使用此指令")
             return
 
     channel_id = str(msg.channel.id) #定義變數channel_id
