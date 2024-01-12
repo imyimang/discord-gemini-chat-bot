@@ -20,6 +20,7 @@ bot = commands.Bot(command_prefix="*", intents=discord.Intents.all()) #設定dis
 
 @bot.event
 async def on_message(msg):   #如果有訊息發送就會觸發
+    path = os.path.abspath(f'channel.json')
    
     if msg.author == bot.user:   #如果訊息發送者是自己就不再執行下面的程式
         return
@@ -56,7 +57,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
        if isinstance(msg.channel, discord.TextChannel):
         channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
         
-        path = os.path.abspath(f'channel.json')
+        
         if os.path.exists(path):                     #檢查channel.json是否存在,如果存在就執行下面
                 with open('channel.json', 'r', encoding='utf-8') as file:
                     data = json.load(file)  #打開json檔
