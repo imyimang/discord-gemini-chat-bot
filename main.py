@@ -73,6 +73,35 @@ async def on_message(msg):   #如果有訊息發送就會觸發
        await msg.reply("頻道已成功屏蔽")
        return
     
+
+    if msg.content == "blockserver":
+
+        if os.path.exists(path): #如果channel.json存在
+            with open('channel.json', 'r', encoding='utf-8') as file:
+                data = json.load(file)  # 讀取json檔
+            channel_list = data.get("id", []) #定義channel_list為json裡面的資料
+        else:
+            data = {}
+            with open("channel.json", "w") as json_file: #如果json檔案不存在,建立一個json檔案
+                json.dump(data, json_file)
+
+        if isinstance(msg.channel, discord.TextChannel):
+            guild = msg.guild
+            channel_list = data.get("id", [])
+            for channel in guild.channels:
+                if str(channel.id) not in channel_list:
+                    channel_list.append(str(channel.id))  #將伺服器所有的頻道id輸入到json中
+
+            with open('channel.json', 'w', encoding='utf-8') as json_file: #儲存變更
+                json.dump({"id": channel_list}, json_file, indent=2)
+
+            await msg.reply("已封鎖此伺服器所有頻道")
+            print(f"已封鎖此 {msg.guild.name} 上所有頻道")
+            return
+        else:
+            print("請在伺服器中使用此指令")
+            return
+
     channel_id = str(msg.channel.id) #定義變數channel_id
     with open('channel.json', 'r', encoding='utf-8') as file:
         data = json.load(file)  #開啟json檔
