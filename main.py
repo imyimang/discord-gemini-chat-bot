@@ -10,6 +10,7 @@ import asyncio
 import random
 import json
 from Def import history #從Def.py導入history副函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
+from Def import restart #導入restart函式
 
 #如果你想要看懂整個程式
 #建議去科普一下json檔,python字典,python副函式的運作原理
@@ -90,7 +91,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         else:
             await msg.reply("並無儲存的短期記憶")
             
-        restart() #用restart函式來重新載入python專案
+        restart() #用restart函式來重新載入Def.py
         return
 
 
@@ -162,8 +163,7 @@ def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
     
-def restart(): 
-  os.execv(sys.executable, ['python'] + sys.argv)
+
 
 
     

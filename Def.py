@@ -1,6 +1,7 @@
 
 import google.generativeai as genai #導入函式庫
-
+import sys
+import os
 
 genai.configure(api_key="you api key") #中間放上你的api key 如果不知道怎麼拿api key請看文檔
 
@@ -46,3 +47,6 @@ async def history(msg): #建立一個副函式
     print(f":{convo.last.text}") #print出api的回應(可省略)
     reply_text = convo.last.text 
     return reply_text #將api的回應返還給主程式
+
+def restart(): 
+  os.execv(sys.executable, ['python'] + sys.argv) #重啟python專案的函式
