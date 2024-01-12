@@ -49,7 +49,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
                 json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
             return 
         else:
-            msg.reply("請在伺服器中使用此指令")
+            await msg.reply("請在伺服器中使用此指令")
             return
 
 
@@ -80,7 +80,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         await msg.reply("頻道已成功屏蔽")
         return
        else:
-           msg.reply("請在伺服器中使用此指令")
+           await msg.reply("請在伺服器中使用此指令")
            return
        
     
@@ -110,7 +110,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
             print(f"已封鎖此 {msg.guild.name} 上所有頻道")
             return
         else:
-            msg.reply("請在伺服器中使用此指令")
+            await msg.reply("請在伺服器中使用此指令")
             return
 
     channel_id = str(msg.channel.id) #定義變數channel_id
