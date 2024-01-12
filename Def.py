@@ -45,8 +45,6 @@ async def history(msg): #建立一個副函式
         
     await convo.send_message_async(msg) #傳送msg內容給gemini api
     reply_text = convo.last.text 
-    if "@everyone" in reply_text or "@here" in str(reply_text): #如果返回的訊息中有@everyone或@here
-       reply_text = "我不能使用這個指令!"  #就返回這段 (這兩行可以選擇刪除)
     print(f":{reply_text}") #print出api的回應(可省略)
     return reply_text #將api的回應返還給主程式
 
