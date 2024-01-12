@@ -49,6 +49,8 @@ async def on_message(msg):   #如果有訊息發送就會觸發
             return 
         else:
             msg.reply("請在伺服器中使用此指令")
+            return
+
 
     if msg.content == "blockchannel":  #如果訊息內容="blockchannel"就執行下面
        if isinstance(msg.channel, discord.TextChannel):
@@ -78,6 +80,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         return
        else:
            msg.reply("請在伺服器中使用此指令")
+           return
        
     
 
