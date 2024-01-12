@@ -121,14 +121,14 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         reply_text = await history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
     else:
         reply_text = await history(msg)    #如果使用者沒有歷史紀錄就直接把訊息發給api
-
+    update_message_history(msg.author.id, reply_text) #將api的回應上傳到短期記憶
     if "@everyone" in reply_text or "@here" in str(reply_text): #如果返回的訊息中有@everyone或@here
        reply_text = "我不能使用這個指令!"  #就返回這段 (這兩行可以選擇刪除)
-       
+
     await msg.reply(reply_text)  #將回應回傳給使用者
     return
 
-    update_message_history(msg.author.id, reply_text) #將api的回應上傳到短期記憶
+
 
 
 #下面是message log,沒有需要可以不用加
