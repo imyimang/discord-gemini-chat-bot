@@ -24,7 +24,7 @@ status = cycle(['Gemini chat bot', f'我是{bot.user.name}', '正在聊天']) #�
 @bot.event
 async def on_ready():
     print(f'{bot.user} 已上線！')
-    change_status.start()
+    change_status.start() #讓機器人顯示狀態
 
 
 @bot.event
