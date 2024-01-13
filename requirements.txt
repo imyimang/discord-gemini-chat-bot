@@ -1,0 +1,8 @@
+os
+re
+datetime
+discord
+google-generativeai
+json
+aiohttp
+itertools
