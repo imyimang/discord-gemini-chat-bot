@@ -6,9 +6,11 @@ import discord
 import google.generativeai as genai
 from discord.ext import commands, tasks
 import json
+import aiohttp
 from itertools import cycle
 from Def import history #從Def.py導入history副函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
-from Def import restart #導入restart函式 (Def.py請使用github上最新版本,否則無法正常使用reset指令)
+from Def import restart #導入restart函式
+from Def import gen_image #導入gen_image函式
 #如果你想要看懂整個程式
 #建議去科普一下json檔,python字典,python副函式的運作原理
 
@@ -19,6 +21,9 @@ bot = commands.Bot(command_prefix="*", intents=discord.Intents.all()) #設定dis
 
 status = cycle(['Gemini chat bot', f'我是{bot.user.name}', '正在聊天']) #機器人顯示的個人狀態(可自行更改,要刪除這行也可以)
 
+@tasks.loop(seconds=10)  # 每隔10秒更換一次機器人個人狀態
+async def change_status():
+    await bot.change_presence(activity=discord.Game(next(status)))
 
 @bot.event
 async def on_ready():
@@ -101,6 +106,25 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         restart() #用restart函式來重新載入python專案
         return
 
+    if msg.attachments: #如果訊息中有檔案舊執行下面
+
+        
+        for attachment in msg.attachments: 
+            
+            if any(attachment.filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp']): #檢測副檔名
+                
+
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(attachment.url) as resp: #讀取圖片的url並將他用aiohttp函式庫轉換成數據
+                        if resp.status != 200:
+                            await msg.reply('圖片載入失敗') #如果圖片分析失敗就不執行後面
+                            return
+                        message = await msg.reply("正在分析圖片")
+                        image_data = await resp.read()  #定義image_data為aiohtp回應的數據
+                        dc_msg = clean_discord_message(msg.content) #格式化訊息
+                        response_text = await gen_image(image_data, dc_msg) #用gen_image函式來發送圖片數據跟文字給api
+                        await split_and_send_messages(message, response_text, 1700) #如果回應文字太長就拆成兩段
+                        return
 
 
 
@@ -172,10 +196,18 @@ def clean_discord_message(input_string): #刪除 Discord 聊天訊息中位於 <
 def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
+
     
-@tasks.loop(seconds=10)  # 每隔10秒更換一次機器人個人狀態
-async def change_status():
-    await bot.change_presence(activity=discord.Game(next(status)))
+async def split_and_send_messages(message, text, max_length):
+
+    messages = []
+    for i in range(0, len(text), max_length):
+        sub_message = text[i:i+max_length]  #如果訊息長度超過max_length就把他拆開
+        messages.append(sub_message)
+
+
+    for string in messages:
+        await message.edit(content = string)
 
 
     
