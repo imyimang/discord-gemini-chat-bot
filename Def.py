@@ -58,5 +58,3 @@ async def gen_image(image_data, text):
     return response.text
 
 
-def restart(): 
-  os.execv(sys.executable, ['python'] + sys.argv) #重啟python專案的函式

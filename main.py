@@ -8,7 +8,6 @@ import json
 import aiohttp
 from itertools import cycle
 from Def import history #從Def.py導入history函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
-from Def import restart #導入restart函式
 from Def import gen_image #導入gen_image函式
 
 #如果你想要看懂整個程式
@@ -139,8 +138,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     if msg.content.lower() == "reset" or msg.content == "reset": #如果訊息內容="reset"
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
-            await msg.reply("您的短期記憶已清空")
-            restart() #用restart函式來重新載入python專案
+            await msg.reply("您的短期記憶已清空")            
            
         else:
             await msg.reply("並無儲存的短期記憶")
@@ -193,7 +191,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     if msg.author.id in log:
         reply_text = await history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
     else:
-        reply_text = await history(msg)    #如果使用者沒有歷史紀錄就直接把訊息發給api
+        reply_text = await history(msg.content)    #如果使用者沒有歷史紀錄就直接把訊息發給api
     update_message_history(msg.author.id, reply_text) #將api的回應上傳到短期記憶
     if "@everyone" in reply_text or "@here" in str(reply_text): #如果返回的訊息中有@everyone或@here
        reply_text = "我不能使用這個指令!"  #就返回這段 (這兩行可以選擇刪除)
