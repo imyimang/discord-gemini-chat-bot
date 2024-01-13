@@ -4,8 +4,9 @@ import re
 from datetime import datetime,timezone,timedelta
 import discord
 import google.generativeai as genai
-from discord.ext import commands
+from discord.ext import commands, tasks
 import json
+from itertools import cycle
 from Def import history #從Def.py導入history副函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
 from Def import restart #導入restart函式 (Def.py請使用github上最新版本,否則無法正常使用reset指令)
 #如果你想要看懂整個程式
@@ -15,6 +16,14 @@ from Def import restart #導入restart函式 (Def.py請使用github上最新版�
 log = {} #創建一個名稱叫log的字典 用來存放短期記憶
 
 bot = commands.Bot(command_prefix="*", intents=discord.Intents.all()) #設定discord bot,prefix可以自己改
+
+status = cycle(['Gemini chat bot', f'我是{bot.user.name}', '正在聊天']) #機器人顯示的個人狀態(可自行更改,要刪除這行也可以)
+
+
+@bot.event
+async def on_ready():
+    print(f'{bot.user} 已上線！')
+    change_status.start() #讓機器人顯示狀態
 
 
 @bot.event
@@ -164,7 +173,9 @@ def get_formatted_message_history(user_id):
     if user_id in log: #如果user_id有在log字典裏面
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
     
-
+@tasks.loop(seconds=10)  # 每隔10秒更換一次機器人個人狀態
+async def change_status():
+    await bot.change_presence(activity=discord.Game(next(status)))
 
 
     
