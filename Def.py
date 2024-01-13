@@ -49,12 +49,13 @@ async def history(msg): #建立一個函式
     return reply_text #將api的回應返還給主程式
 
 
-async def gen_image(image_data, text):
+async def gen_image(image_data, text): #生成包含圖片的訊息的回應
     image_parts = [{"mime_type": "image/jpeg", "data": image_data}]
-    prompt_parts = [image_parts[0], f"\n{text if text else '這張圖片代表什麼?給我更多細節'}"]
+    #(下)如果text不為空,就用text依據文字內容來生成回應,如果為空,就依據"這張圖片代表什麼?給我更多細節"來生成回應
+    prompt_parts = [image_parts[0], f"\n{text if text else '這張圖片代表什麼?給我更多細節'}"] 
     response = image_model.generate_content(prompt_parts)
-    if(response._error):
+    if(response._error): #如果生成錯誤
         return "無法分析這張圖"
-    return response.text
+    return response.text #返回生成的內容
 
 
