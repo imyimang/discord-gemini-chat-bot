@@ -42,7 +42,7 @@ convo = model.start_chat(history=[
  # 這裡放你的prompt
 ])
 
-async def history(msg): #建立一個副函式
+async def history(msg): #建立一個函式
     await convo.send_message_async(msg) #傳送msg內容給gemini api
     reply_text = convo.last.text 
     print(f":{reply_text}") #print出api的回應(可省略)

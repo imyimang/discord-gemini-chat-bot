@@ -7,12 +7,12 @@ from discord.ext import commands, tasks
 import json
 import aiohttp
 from itertools import cycle
-from Def import history #從Def.py導入history副函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
+from Def import history #從Def.py導入history函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
 from Def import restart #導入restart函式
 from Def import gen_image #導入gen_image函式
 
 #如果你想要看懂整個程式
-#建議去科普一下json檔,python字典,python副函式的運作原理
+#建議去科普一下json檔,python字典,python函式的運作原理
 
 
 log = {} #創建一個名稱叫log的字典 用來存放短期記憶
@@ -220,7 +220,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     await bot.process_commands(msg)
 
       
-def update_message_history(user_id, text): #定義update_message_history副函式
+def update_message_history(user_id, text): #定義update_message_history函式
     if user_id in log:  #如果user_id在字典裡面
         log[user_id].append(text)   #就把text加入以user_id命名的鍵中
         if len(log[user_id]) > 15: #如果user_id裡面存的資料大於15筆(數字可以自己設定,不一定要15,這代表了他的短期記憶容量)
