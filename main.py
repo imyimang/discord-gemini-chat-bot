@@ -160,11 +160,12 @@ async def on_message(msg):   #如果有訊息發送就會觸發
                         if resp.status != 200:
                             await msg.reply('圖片載入失敗') #如果圖片分析失敗就不執行後面
                             return
-                        message = await msg.reply("正在分析圖片")
+                        bot_msg = await msg.reply("正在分析圖片")
+                        print(f"正在分析{msg.author.name}的圖片")
                         image_data = await resp.read()  #定義image_data為aiohtp回應的數據
                         dc_msg = clean_discord_message(msg.content) #格式化訊息
                         response_text = await gen_image(image_data, dc_msg) #用gen_image函式來發送圖片數據跟文字給api
-                        await split_and_send_messages(message, response_text, 1700) #如果回應文字太長就拆成兩段
+                        await split_and_send_messages(msg, bot_msg, response_text, 1700) #如果回應文字太長就拆成兩段
                         return
 
 
@@ -238,7 +239,7 @@ def get_formatted_message_history(user_id):
         return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
 
 
-async def split_and_send_messages(message, text, max_length):
+async def split_and_send_messages(msg, bot_msg, text, max_length):
 
 
     messages = []
@@ -248,7 +249,8 @@ async def split_and_send_messages(message, text, max_length):
 
 
     for string in messages:
-        await message.edit(content = string)
+        await bot_msg.edit(content = string)
+        print(f"已分析完畢{msg.author.name}的圖片")
 
     
 bot.run("your token")   #放入你的discord bot token
