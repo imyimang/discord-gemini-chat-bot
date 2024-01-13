@@ -140,11 +140,10 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")
+            restart() #用restart函式來重新載入python專案
            
         else:
             await msg.reply("並無儲存的短期記憶")
-            
-        restart() #用restart函式來重新載入Def.py
         return
 
     if msg.attachments: #如果訊息中有檔案舊執行下面

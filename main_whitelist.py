@@ -95,19 +95,19 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     if channel_id not in channel_list:  #如果頻道id不在json檔裡面
         return #就不執行下面程式
 
+
     if msg.content.lower() == "reset" or msg.content == "reset": #如果訊息內容="reset"
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")
+            restart() #用restart函式來重新載入python專案
            
         else:
             await msg.reply("並無儲存的短期記憶")
-            
-        restart() #用restart函式來重新載入python專案
         return
 
-    if msg.attachments: #如果訊息中有檔案舊執行下面
 
+    if msg.attachments: #如果訊息中有檔案舊執行下面
         
         for attachment in msg.attachments: 
             
