@@ -172,7 +172,9 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     #==========================================
     if isinstance(msg.channel, discord.TextChannel):
       print(f"Server name:{msg.guild.name}")
-    print(f"Message ID: {msg.id}\t(私訊)")
+    else:
+        print(f"Server name:私訊")
+    print(f"Message ID: {msg.id}")
     print(f"Message Content: {msg.content}")
     print(f"Author ID: {msg.author.id}")
     print(f"Author Name: {msg.author.name}")
@@ -204,15 +206,15 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 
 #下面是message log,沒有需要可以不用加
     #==========================================
-    f = open('ai_log.txt', "a", encoding="utf-8")
-    mt = dt2.strftime("%Y-%m-%d %H:%M:%S")
-    if isinstance(msg.channel, discord.TextChannel):
-      f.write(f"===============\n{mt}\n\n{msg.author.name}({msg.author.id})\t在\t{msg.guild.name}({msg.guild.id})\t傳送:\n{msg.content}\n")
-    else:
-      f.write(f"===============\n{mt}\n\n{msg.author.name}({msg.author.id})\t在\t私訊\t傳送:\n{msg.content}\n")
-        
-  
-    f.write(f"\nAI回應:\n{reply_text}\n")
+    with open('ai_log.txt', "a", encoding="utf-8") as f:
+        dt1 = datetime.utcnow().replace(tzinfo=timezone.utc) 
+        dt2 = dt1.astimezone(timezone(timedelta(hours=8)))
+        mt = dt2.strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(msg.channel, discord.TextChannel):
+            f.write(f"===============\n{mt}\n\n{msg.author.name}({msg.author.id})\t在\t{msg.guild.name}({msg.guild.id})\t傳送:\n{msg.content}\n")
+        else:
+            f.write(f"===============\n{mt}\n\n{msg.author.name}({msg.author.id})\t在\t私訊\t傳送:\n{msg.content}\n")
+        f.write(f"\nAI回應:\n{reply_text}\n")
     #==========================================
       
     await bot.process_commands(msg)
