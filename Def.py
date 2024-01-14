@@ -43,6 +43,8 @@ convo = model.start_chat(history=[
 ])
 
 async def history(msg): #建立一個函式
+    if not msg: #檢測msg是否為空(為空會報錯)
+        return "這段訊息是空的"
     await convo.send_message_async(msg) #傳送msg內容給gemini api
     reply_text = convo.last.text 
     print(f":{reply_text}") #print出api的回應(可省略)
