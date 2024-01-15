@@ -38,17 +38,18 @@ model = genai.GenerativeModel(model_name="gemini-pro",
 image_model = genai.GenerativeModel(model_name="gemini-pro-vision", generation_config=generation_config, safety_settings=safety_settings)
 # 定義另外一個model用來生成圖片回應(兩者不能相容)
 
-convo = model.start_chat(history=[
+
+async def history(msg): #建立一個函式
+  convo = model.start_chat(history=[
  # 這裡放你的prompt
 ])
 
-async def history(msg): #建立一個函式
-    if not msg: #檢測msg是否為空(為空會報錯)
-        return "這段訊息是空的"
-    await convo.send_message_async(msg) #傳送msg內容給gemini api
-    reply_text = convo.last.text 
-    print(f":{reply_text}") #print出api的回應(可省略)
-    return reply_text #將api的回應返還給主程式
+  if not msg: #檢測msg是否為空(為空會報錯)
+      return "這段訊息是空的"
+  await convo.send_message_async(msg) #傳送msg內容給gemini api
+  reply_text = convo.last.text 
+  print(f":{reply_text}") #print出api的回應(可省略)
+  return reply_text #將api的回應返還給主程式
 
 
 async def gen_image(image_data, text): #生成包含圖片的訊息的回應
