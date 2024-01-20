@@ -18,7 +18,7 @@ log = {} #創建一個名稱叫log的字典 用來存放短期記憶
 
 bot = commands.Bot(command_prefix="*", intents=discord.Intents.all()) #設定discord bot,prefix可以自己改
 
-status = cycle(['Gemini chat bot', f'我是{bot.user.name}', '正在聊天']) #機器人顯示的個人狀態(可自行更改,要刪除這行也可以)
+status = cycle(['Gemini chat bot', f'我是ai機器人', '正在聊天']) #機器人顯示的個人狀態(可自行更改,要刪除這行也可以)
 
 @tasks.loop(seconds=10)  # 每隔10秒更換一次機器人個人狀態
 async def change_status():
