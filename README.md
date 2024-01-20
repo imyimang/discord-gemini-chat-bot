@@ -35,6 +35,7 @@
 ## 前置作業
 1.把你的discord bot token放入bot.run(通常在main.py的最後一行)
 ![圖1](https://media.discordapp.net/attachments/844748759144857661/1198277150021779516/image.png?ex=65be518f&is=65abdc8f&hm=6d9f91c7b0b3ea363b35d8701a05c3d6bbb554d222d380cbe3ee01c8bc56cfbb&=&format=webp&quality=lossless&width=665&height=75)
+
 2.把你的api key放入裡面(還不會創api key的請看下面)
 ![圖1](https://media.discordapp.net/attachments/844748759144857661/1198277490133712926/image.png?ex=65be51e0&is=65abdce0&hm=1c6cf4c9a717acbf9b636acae23bb67d7f9849e3fd6d0e313ce31e7f1f83610c&=&format=webp&quality=lossless&width=960&height=56)
 這樣就完成前置作業了
