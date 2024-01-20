@@ -41,7 +41,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
           print("沒有權限在此頻道發言")
           return
     
-    if msg.content == "closechannel":   #如果訊息內容="closechannel"就執行下面
+    if msg.content.lower() == "closechannel":   #如果訊息內容="closechannel"就執行下面
         channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
         with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
         
@@ -61,7 +61,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
             json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
         return 
 
-    if msg.content == "openchannel":  #如果訊息內容="openchannel"就執行下面
+    if msg.content.lower() == "openchannel":  #如果訊息內容="openchannel"就執行下面
        channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
        
        path = os.path.abspath(f'channel.json')
@@ -95,7 +95,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         return #就不執行下面程式
 
 
-    if msg.content.lower() == "reset" or msg.content == "reset": #如果訊息內容="reset"
+    if msg.content.lower() == "reset": #如果訊息內容="reset"
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")
