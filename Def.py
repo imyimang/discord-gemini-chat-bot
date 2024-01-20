@@ -3,7 +3,7 @@ import google.generativeai as genai #導入函式庫
 import sys
 import os
 
-genai.configure(api_key="you api key") #中間放上你的api key 如果不知道怎麼拿api key請看文檔
+genai.configure(api_key="your api key") #中間放上你的api key 如果不知道怎麼拿api key請看文檔
 
 # 模型設定 詳細設定請去google
 generation_config = {
