@@ -45,7 +45,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
           print("沒有權限在此頻道發言")
           return
     
-    if msg.content == "unblockchannel":   #如果訊息內容="unblockchannel"就執行下面
+    if msg.content.lower() == "unblockchannel":   #如果訊息內容="unblockchannel"就執行下面
         if isinstance(msg.channel, discord.TextChannel):
             channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
             with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
@@ -68,7 +68,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
             return
 
 
-    if msg.content == "blockchannel":  #如果訊息內容="blockchannel"就執行下面
+    if msg.content.lower() == "blockchannel":  #如果訊息內容="blockchannel"就執行下面
        if isinstance(msg.channel, discord.TextChannel):
         channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
         
@@ -100,7 +100,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
        
     
 
-    if msg.content == "blockserver":
+    if msg.content.lower() == "blockserver":
 
         if os.path.exists(path): #如果channel.json存在
             with open('channel.json', 'r', encoding='utf-8') as file:
@@ -135,7 +135,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     if channel_id in channel_list:  #如果頻道id在json檔裡面
         return #就不執行下面程式
 
-    if msg.content.lower() == "reset" or msg.content == "reset": #如果訊息內容="reset"
+    if msg.content.lower() == "reset": #如果訊息內容="reset"
         if msg.author.id in log:
             del log[msg.author.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")            
