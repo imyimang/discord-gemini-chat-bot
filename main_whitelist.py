@@ -62,30 +62,25 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         return 
 
     if msg.content.lower() == "openchannel":  #如果訊息內容="openchannel"就執行下面
-       channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
+        channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
        
-       path = os.path.abspath(f'channel.json')
-       if os.path.exists(path):                     #檢查channel.json是否存在,如果存在就執行下面
-            with open('channel.json', 'r', encoding='utf-8') as file:
-                data = json.load(file)  #打開json檔
-            channel_list = data.get("id", [])  #取得json檔裡面的資料
 
-       else:  #如果channel.json不存在
-            data = {}
-            with open("channel.json", "w") as json_file: #建立一個空白的channel.json
-                json.dump(data, json_file)
-                data = json.load(json_file)
-            channel_list = data.get("id", [])
 
-       if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
+        with open('channel.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)  #打開json檔
+        channel_list = data.get("id", [])  #取得json檔裡面的資料
+
+
+
+        if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
            await msg.reply("該頻道已經開啟AI聊天了")
            return
-       channel_list.append(channel_id)  #如果json裡面沒有此頻道id,就把此頻道id加入json檔
-       data["id"] = channel_list
-       with open('channel.json', 'w', encoding='utf-8') as file:
+        channel_list.append(channel_id)  #如果json裡面沒有此頻道id,就把此頻道id加入json檔
+        data["id"] = channel_list
+        with open('channel.json', 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=2)  #儲存變更
-       await msg.reply("頻道已成功開啟AI聊天")
-       return
+        await msg.reply("頻道已成功開啟AI聊天")
+        return
     
     channel_id = str(msg.channel.id) #定義變數channel_id
     with open('channel.json', 'r', encoding='utf-8') as file:

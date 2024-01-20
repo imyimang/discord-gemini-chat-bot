@@ -35,8 +35,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(msg):   #如果有訊息發送就會觸發
-    path = os.path.abspath(f'channel.json')
-   
+
     if msg.author == bot.user:   #如果訊息發送者是自己就不再執行下面的程式
         return
     if isinstance(msg.channel, discord.TextChannel):   #如果訊息在文字頻道就執行下面
@@ -73,17 +72,12 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
         
         
-        if os.path.exists(path):                     #檢查channel.json是否存在,如果存在就執行下面
-                with open('channel.json', 'r', encoding='utf-8') as file:
-                    data = json.load(file)  #打開json檔
-                channel_list = data.get("id", [])  #定義channel_list為json檔裡面的資料
 
-        else:  #如果channel.json不存在
-                data = {}
-                with open("channel.json", "w") as json_file: #建立一個空白的channel.json
-                    json.dump(data, json_file)
-                    data = json.load(json_file)
-                channel_list = data.get("id", []) #定義channel_list 下面會用到
+        with open('channel.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)  #打開json檔
+        channel_list = data.get("id", [])  #定義channel_list為json檔裡面的資料
+
+
 
         if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
             await msg.reply("該頻道已被屏蔽")
@@ -102,14 +96,11 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 
     if msg.content.lower() == "blockserver":
 
-        if os.path.exists(path): #如果channel.json存在
-            with open('channel.json', 'r', encoding='utf-8') as file:
-                data = json.load(file)  # 讀取json檔
-            channel_list = data.get("id", []) #定義channel_list為json裡面的資料
-        else:
-            data = {}
-            with open("channel.json", "w") as json_file: #如果json檔案不存在,建立一個json檔案
-                json.dump(data, json_file)
+    
+        with open('channel.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)  # 讀取json檔
+        channel_list = data.get("id", []) #定義channel_list為json裡面的資料
+
 
         if isinstance(msg.channel, discord.TextChannel):
             guild = msg.guild
