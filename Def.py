@@ -1,7 +1,5 @@
 
 import google.generativeai as genai #導入函式庫
-import sys
-import os
 import json
 
 data = json.load(open("config.json", encoding="utf-8"))
