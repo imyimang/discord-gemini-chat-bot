@@ -2,8 +2,10 @@
 import google.generativeai as genai #導入函式庫
 import sys
 import os
+import json
 
-genai.configure(api_key="your api key") #中間放上你的api key 如果不知道怎麼拿api key請看文檔
+data = json.load(open("config.json", encoding="utf-8"))
+genai.configure(api_key=data["api_key"]) #中間放上你的api key 如果不知道怎麼拿api key請看文檔
 
 # 模型設定 詳細設定請去google
 generation_config = {

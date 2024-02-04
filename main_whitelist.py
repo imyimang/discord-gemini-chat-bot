@@ -15,8 +15,9 @@ from Def import gen_image #導入gen_image函式
 
 
 log = {} #創建一個名稱叫log的字典 用來存放短期記憶
+data = json.load(open("config.json", encoding="utf-8")) #讀取config的資料
 
-bot = commands.Bot(command_prefix="*", intents=discord.Intents.all()) #設定discord bot,prefix可以自己改
+bot = commands.Bot(command_prefix=data["prefix"], intents=discord.Intents.all()) #設定discord bot,prefix可以自己改
 
 status = cycle(['Gemini chat bot', f'我是ai機器人', '正在聊天']) #機器人顯示的個人狀態(可自行更改,要刪除這行也可以)
 
@@ -180,7 +181,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 def update_message_history(user_id, text): #定義update_message_history函式
     if user_id in log:  #如果user_id在字典裡面
         log[user_id].append(text)   #就把text加入以user_id命名的鍵中
-        if len(log[user_id]) > 15: #如果user_id裡面存的資料大於15筆(數字可以自己設定,不一定要15,這代表了他的短期記憶容量)
+        if len(log[user_id]) > int(data["memory_max"]): #如果user_id裡面存的資料大於config中的記憶上限
             log[user_id].pop(0) #就pop最早的一筆資料
     else:
         log[user_id] = [text] #如果user_id不在字典裡就創建一個,並把text放入
@@ -210,4 +211,4 @@ async def split_and_send_messages(msg, bot_msg, text, max_length):
 
 
     
-bot.run("you token")   #放入你的discord bot token
+bot.run(data["token"])   #放入你的discord bot token
