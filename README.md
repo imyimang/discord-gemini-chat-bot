@@ -153,8 +153,8 @@ with open('channel.json', 'w', encoding='utf-8') as file:
 ```py
 #要先import os
 current_dir = os.path.dirname(__file__)
-config_path = os.path.join(current_dir, "config.json")
-with open('channel.json', 'w', encoding='utf-8') as file:
+config_path = os.path.join(current_dir, "channel.json")
+with open(config_path, 'w', encoding='utf-8') as file:
     json.dump(data, file, ensure_ascii=False, indent=2)
 ```
 這樣應該就能解決問題了，其他問題可以到Issues或Dc私訊".yimang"
