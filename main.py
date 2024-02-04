@@ -146,9 +146,9 @@ async def on_message(msg):   #如果有訊息發送就會觸發
                 async with aiohttp.ClientSession() as session:
                     async with session.get(attachment.url) as resp: #讀取圖片的url並將他用aiohttp函式庫轉換成數據
                         if resp.status != 200:
-                            await msg.reply('圖片載入失敗') #如果圖片分析失敗就不執行後面
+                            await msg.reply('圖片載入失敗', allowed_mentions=discord.AllowedMentions.none()) #如果圖片分析失敗就不執行後面
                             return
-                        bot_msg = await msg.reply("正在分析圖片")
+                        bot_msg = await msg.reply("正在分析圖片", allowed_mentions=discord.AllowedMentions.none())
                         print(f"正在分析{msg.author.name}的圖片")
                         image_data = await resp.read()  #定義image_data為aiohtp回應的數據
                         dc_msg = clean_discord_message(msg.content) #格式化訊息
@@ -189,7 +189,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     if "@everyone" in reply_text or "@here" in str(reply_text): #如果返回的訊息中有@everyone或@here
        reply_text = "我不能使用這個指令!"  #就返回這段 (這兩行可以選擇刪除)
        
-    await msg.reply(reply_text)  #將回應回傳給使用者
+    await msg.reply(reply_text, allowed_mentions=discord.AllowedMentions.none())  #將回應回傳給使用者
     reply_text = "你回應:" + reply_text
     update_message_history(msg.author.id, reply_text) #將api的回應上傳到短期記憶
     return
