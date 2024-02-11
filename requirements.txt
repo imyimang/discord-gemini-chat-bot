@@ -6,3 +6,4 @@ google-generativeai
 json
 aiohttp
 itertools
+beautifulsoup4

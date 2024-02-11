@@ -8,6 +8,8 @@ import aiohttp
 from itertools import cycle
 from Def import history #從Def.py導入history函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
 from Def import gen_image #導入gen_image函式
+from spider import islink
+from spider import gettitle
 
 #如果你想要看懂整個程式
 #建議去科普一下json檔,python字典,python函式的運作原理
@@ -156,6 +158,26 @@ async def on_message(msg):   #如果有訊息發送就會觸發
                         await split_and_send_messages(msg, bot_msg, response_text, 1700) #如果回應文字太長就拆成兩段
                         return
 
+#通過爬蟲來獲取網址網站標題，進行簡單的連結判讀
+        links = islink(msg.content)
+        #如果訊息內容有連結
+        if links:
+            links = '\n'.join(links)
+            title = gettitle(links) #取得連結中的title
+            if title:
+                word = msg.content.replace(links, f"(一個網址，網址標題是:'{title}')")
+                reply_text =f"「{msg.author.name}」說:「'{word}'」"  #將連結網站的title放入短期記憶
+            else:
+                word = msg.content.replace(links, "(一個網址，網址無法辨識)")
+                reply_text = f"「{msg.author.name}」說:{word}"
+
+            await update_message_history(msg.channel.id, reply_text)
+            reply_text = await history(get_formatted_message_history(msg.channel.id))
+            await msg.reply(reply_text, allowed_mentions=discord.AllowedMentions.none())
+            print(reply_text)
+            print(log[msg.channel.id])
+            return
+
 
 
 
@@ -197,18 +219,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 
 
 
-#下面是message log,沒有需要可以不用加
-    #==========================================
-    with open('ai_log.txt', "a", encoding="utf-8") as f:
-        dt1 = datetime.utcnow().replace(tzinfo=timezone.utc) 
-        dt2 = dt1.astimezone(timezone(timedelta(hours=8)))
-        mt = dt2.strftime("%Y-%m-%d %H:%M:%S")
-        if isinstance(msg.channel, discord.TextChannel):
-            f.write(f"===============\n{mt}\n\n{msg.author.name}({msg.author.id})\t在\t{msg.guild.name}({msg.guild.id})\t傳送:\n{msg.content}\n")
-        else:
-            f.write(f"===============\n{mt}\n\n{msg.author.name}({msg.author.id})\t在\t私訊\t傳送:\n{msg.content}\n")
-        f.write(f"\nAI回應:\n{reply_text}\n")
-    #==========================================
+
       
     await bot.process_commands(msg)
 
