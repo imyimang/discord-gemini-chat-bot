@@ -104,6 +104,7 @@ Def.py無須更改
 * User的地方就是你要問的問題
 * Model的地方就是你想要他怎麼回答
 也可以直接用對話紀錄然後把你想要模擬的對象放在Model的地方,自己放在User的地方
+只要複製prompt的格式並且更改裡面內容即可
 
 ## The caller does not have permisson
 當你點擊創建api key的時候,可能會出現下面的錯誤
