@@ -32,7 +32,7 @@ safety_settings = [
   },
 ]
 
-model = genai.GenerativeModel(model_name="gemini-pro",
+model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                               generation_config=generation_config,
                               safety_settings=safety_settings) #設定模型 這邊不用動他
 image_model = genai.GenerativeModel(model_name="gemini-pro-vision", generation_config=generation_config, safety_settings=safety_settings)

@@ -84,7 +84,7 @@ Def.py無須更改
 ![圖6](images/6.png)
 名字不取也沒關係可以直接按Save
 
-5.匯出你的prompt
+4.匯出你的prompt
 點擊右上角的Get code就能匯出
 ![圖7](images/7.png)
 
@@ -93,7 +93,7 @@ Def.py無須更改
 這段就是你的prompt了
 ![圖9](images/8.png)
 
-6.回到Def.py
+5.回到Def.py
 
 ![圖11](images/9.png)
 
@@ -103,12 +103,16 @@ Def.py無須更改
 
 * User的地方就是你要問的問題
 * Model的地方就是你想要他怎麼回答
+
 也可以直接用對話紀錄然後把你想要模擬的對象放在Model的地方,自己放在User的地方
+
 只要複製prompt的格式並且更改裡面內容即可
 
 ## The caller does not have permisson
 當你點擊創建api key的時候,可能會出現下面的錯誤
+
 **The caller does not have permisson**
+
 這可能是由於你刪除了你的前一個api key
 
 這種情況建議用另一個沒創過api key的帳號
@@ -157,4 +161,34 @@ config_path = os.path.join(current_dir, "channel.json")
 with open(config_path, 'w', encoding='utf-8') as file:
     json.dump(data, file, ensure_ascii=False, indent=2)
 ```
-這樣應該就能解決問題了，其他問題可以到Issues或Dc私訊".yimang"
+這樣應該就能解決問題了，其他問題可以到Issues或Dc私訊"yimang__"
+
+## Gemini不同模型的選擇
+近期gemini有釋出了免費的1.0和1.5版本
+
+都是可以免費使用，相關的限速限制如下圖
+![圖13](images/11.png)
+
+如果是使用免費版本的話建議使用1.0
+
+1.5雖然模型經過優化但限速很嚴重
+
+更改模型只要到Def.py的
+```py
+model = genai.GenerativeModel(model_name="gemini-1.0-pro",
+                              generation_config=generation_config,
+                              safety_settings=safety_settings) #設定模型 這邊不用動他
+image_model = genai.GenerativeModel(model_name="gemini-pro-vision", generation_config=generation_config, safety_settings=safety_settings)
+```
+這一段
+
+將
+```py
+model_name="gemini-1.0-pro"
+```
+更改為
+```py
+model_name="gemini-1.5-pro"
+```
+即可
+可以根據自身想要的模型做更改
