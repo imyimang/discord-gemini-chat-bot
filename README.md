@@ -62,55 +62,52 @@ Def.py無須更改
 2.登入你的google帳號(要帳戶年滿18歲) [**詳情點我**](<https://ai.google.dev/available_regions?hl=zh-tw>)
 
 3.打勾同意用戶條款然後按繼續
-![圖1](https://media.discordapp.net/attachments/1128696283276783688/1194674355217641512/image.png?ex=65b13632&is=659ec132&hm=4a068bf88e4cac46219dfbc4c80596a784c0e9f2a1bae6f58f09f836dd5f43b2&=&format=webp&quality=lossless&width=1081&height=570)
+![圖1](images/1.png)
 
 4.點get api key
-![圖2](https://media.discordapp.net/attachments/1128696283276783688/1194675382012624986/image.png?ex=65b13727&is=659ec227&hm=e5a35f34c4dc5b2f558222977076d3d075539895c02219db7f53d77c4d1ac816&=&format=webp&quality=lossless&width=1081&height=562)
+![圖2](images/2.png)
 
-5.點create api key
-![圖3](https://media.discordapp.net/attachments/1128696283276783688/1194675688846930070/image.png?ex=65b13770&is=659ec270&hm=bba87747b250fa3a6c5774807866428af5721e3fc63f65ceea485a80b24a457b&=&format=webp&quality=lossless&width=1081&height=571)
+5.點create api key(如果還沒有建立專案就點create api key in new project)
+![圖3](images/3.png)
 
 6.這樣就得到api key囉 點copy就能複製
-![圖4](https://media.discordapp.net/attachments/1128696283276783688/1194676224111431831/image.png?ex=65b137ef&is=659ec2ef&hm=8cc21d0ecdf0d428d8d15d052e8494c1597808ecda401848db788ed4c1ba461a&=&format=webp&quality=lossless&width=1081&height=570)
+![圖4](images/4.png)
 
 
 ## 如何產生訓練prompt
 1.前往gemini的網站 [**點我**](<https://makersuite.google.com/>)
 
 2.點create new,然後選Chat prompt
-![圖5](https://media.discordapp.net/attachments/1141922914178977946/1194679445739552818/image.png?ex=65b13aef&is=659ec5ef&hm=04155b8a51654cd61d85d3bcef075bfb3766c64a0d9d1ba61ad9226adb73f765&=&format=webp&quality=lossless&width=1081&height=505)
+![圖5](images/5.png)
 
 3.先隨便打點東西然後按Save
-![圖6](https://media.discordapp.net/attachments/1141922914178977946/1194679702577758300/image.png?ex=65b13b2d&is=659ec62d&hm=3ed1ae144bdc72472eed173b5d9452f28b640a93f86f3dbdf562bd59e4f0049d&=&format=webp&quality=lossless&width=1081&height=507)
+![圖6](images/6.png)
 名字不取也沒關係可以直接按Save
 
-4.接下來就能開始訓練啦
-![圖7](https://media.discordapp.net/attachments/1141922914178977946/1194680165784096858/image.png?ex=65b13b9b&is=659ec69b&hm=c00c283623122dcae087f1439166c9a24fc54e5ada7e489a6114295c679db89d&=&format=webp&quality=lossless&width=1081&height=507)
+5.匯出你的prompt
+點擊右上角的Get code就能匯出
+![圖7](images/7.png)
+
+選Python 然後往下滑一點
+
+這段就是你的prompt了
+![圖9](images/8.png)
+
+6.回到Def.py
+
+![圖11](images/9.png)
+
+把框起來的那段換成自己的prompt就可以囉
+
+![圖12](images/10.png)
 
 * User的地方就是你要問的問題
 * Model的地方就是你想要他怎麼回答
 也可以直接用對話紀錄然後把你想要模擬的對象放在Model的地方,自己放在User的地方
 
-5.匯出你的prompt
-點擊右上角的Get code就能匯出啦
-![圖8](https://media.discordapp.net/attachments/1141922914178977946/1194680597700935871/image.png?ex=65b13c02&is=659ec702&hm=e64e5f6a8ac662ec198b5c3c527b884113cee0bf7b8b58d7a8e4242ef133ab00&=&format=webp&quality=lossless&width=1081&height=507)
-選Python 然後往下滑一點
-![圖9](https://media.discordapp.net/attachments/1141922914178977946/1194680841733935204/image.png?ex=65b13c3c&is=659ec73c&hm=afe977493e77b2c8ada07a176fb9d08e1357251e83eaa99985281b546ff05d68&=&format=webp&quality=lossless&width=1058&height=662)
-這段就是你的prompt了
-![圖10](https://media.discordapp.net/attachments/1141922914178977946/1194681056675246212/image.png?ex=65b13c70&is=659ec770&hm=2c1790bc3ffd202fc163006dd9edb8a19c254ed42c0b4fccddfefd65aa976a0f&=&format=webp&quality=lossless&width=1073&height=662)
-
-6.回到Def.py
-
-![圖11](https://media.discordapp.net/attachments/1141922914178977946/1194693909532659813/image.png?ex=65b14868&is=659ed368&hm=002956110a0db9196c47fc5a113100235015ead332e76e3a0cf8831a0fd33a86&=&format=webp&quality=lossless&width=1088&height=662)
-
-把框起來的那段換成自己的prompt就可以囉
-
-![圖12](https://media.discordapp.net/attachments/1141922914178977946/1194694334709239858/image.png?ex=65b148cd&is=659ed3cd&hm=f7d67816f2cf8ac10e07f255a52c325499b77b8d631c81084b48286ff2c71517&=&format=webp&quality=lossless&width=1140&height=662)
-
-
 ## The caller does not have permisson
 當你點擊創建api key的時候,可能會出現下面的錯誤
-![圖13](https://media.discordapp.net/attachments/1141922914178977946/1194873264883892274/image.png?ex=65b1ef72&is=659f7a72&hm=92f15571007a5cde99e807d45ddbd118fb05762539e0f4f0fad04bfefbaff9aa&=&format=webp&quality=lossless&width=1017&height=662)
+**The caller does not have permisson**
 這可能是由於你刪除了你的前一個api key
 
 這種情況建議用另一個沒創過api key的帳號
