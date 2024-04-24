@@ -129,8 +129,8 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         return #就不執行下面程式
 
     if msg.content.lower() == "reset": #如果訊息內容="reset"
-        if msg.author.id in log:
-            del log[msg.author.id] #清空短期記憶
+        if msg.channel.id in log:
+            del log[msg.channel.id] #清空短期記憶
             await msg.reply("您的短期記憶已清空")            
            
         else:
@@ -200,11 +200,11 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  #定義一個時間變數(寫message log用的,如果沒有要用message log可以不用這兩行)
 
     dc_msg = clean_discord_message(msg.content) #將訊息內容放入clean_discord_message(下面會講),簡單來說就是更改訊息的格式,然後把回傳結果放入dc_msg變數
-    dc_msg = "使用者說:" + dc_msg 
-    update_message_history(msg.author.id, dc_msg) #將dc_msg(就是使用者發送的訊息)上傳到短期記憶
+    dc_msg = f"{msg.author.name}:" + dc_msg 
+    update_message_history(msg.channel.id, dc_msg) #將dc_msg(就是使用者發送的訊息)上傳到短期記憶
 
-    if msg.author.id in log:
-        reply_text = await history(get_formatted_message_history(msg.author.id)) #將訊息發送者的id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
+    if msg.channel.id in log:
+        reply_text = await history(get_formatted_message_history(msg.channel.id)) #將頻道id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
     else:
         reply_text = await history(msg.content)    #如果使用者沒有歷史紀錄就直接把訊息發給api
 
@@ -212,8 +212,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
        reply_text = "我不能使用這個指令!"  #就返回這段 (這兩行可以選擇刪除)
        
     await msg.reply(reply_text, allowed_mentions=discord.AllowedMentions.none())  #將回應回傳給使用者
-    reply_text = "你回應:" + reply_text
-    update_message_history(msg.author.id, reply_text) #將api的回應上傳到短期記憶
+    update_message_history(msg.channel.id, reply_text) #將api的回應上傳到短期記憶
     return
 
 
@@ -224,22 +223,22 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     await bot.process_commands(msg)
 
       
-def update_message_history(user_id, text): #定義update_message_history函式
-    if user_id in log:  #如果user_id在字典裡面
-        log[user_id].append(text)   #就把text加入以user_id命名的鍵中
-        if len(log[user_id]) > int(data["memory_max"]): #如果user_id裡面存的資料大於config中的記憶上限
-            log[user_id].pop(0) #就pop最早的一筆資料
+def update_message_history(channel_id, text): #定義update_message_history函式
+    if channel_id in log:  #如果user_id在字典裡面
+        log[channel_id].append(text)   #就把text加入以user_id命名的鍵中
+        if len(log[channel_id]) > int(data["memory_max"]): #如果user_id裡面存的資料大於config中的記憶上限
+            log[channel_id].pop(0) #就pop最早的一筆資料
     else:
-        log[user_id] = [text] #如果user_id不在字典裡就創建一個,並把text放入
+        log[channel_id] = [text] #如果user_id不在字典裡就創建一個,並把text放入
 
 def clean_discord_message(input_string): #刪除 Discord 聊天訊息中位於 < 和 > 之間的文字(讓他能夠放入短期記憶並被ai讀懂)
     bracket_pattern = re.compile(r'<[^>]+>')
     cleaned_content = bracket_pattern.sub('', input_string)
     return cleaned_content  #返回更改格式後的字串
     
-def get_formatted_message_history(user_id):
-    if user_id in log: #如果user_id有在log字典裏面
-        return '\n\n'.join(log[user_id]) #返回user_id裡面存放的內容
+def get_formatted_message_history(channel_id):
+    if channel_id in log: #如果user_id有在log字典裏面
+        return '\n\n'.join(log[channel_id]) #返回user_id裡面存放的內容
 
 
 async def split_and_send_messages(msg, bot_msg, text, max_length):
