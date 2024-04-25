@@ -15,6 +15,7 @@
 ```
 pip install -U -r requirements.txt
 ```
+執行 `main.py` or `main_whitelist.py`
 
 # 介紹
 ### [運作原理](docs/principles.md)
