@@ -13,7 +13,8 @@
 # 前置作業
 將需要的機器人設定填入config.json中
 
-[運作原理](docs/principles.md)
+# 介紹
+### [運作原理](docs/principles.md)
 
 [指令](docs/commands.md)
 
