@@ -12,24 +12,27 @@
 
 # 前置作業
 將需要的機器人設定填入config.json中
+```
+pip install -U -r requirements.txt
+```
 
 # 介紹
 ### [運作原理](docs/principles.md)
 
-[指令](docs/commands.md)
+### [指令](docs/commands.md)
 
 # 常見問題
-[我想要把channel.json改成頻道白名單而不是黑名單怎麼麼辦](docs/q1.md)
+### [我想要把channel.json改成頻道白名單而不是黑名單怎麼麼辦](docs/q1.md)
 
-[如何取得gemini api key](docs/q2.md)
+### [如何取得gemini api key](docs/q2.md)
 
-[如何產生訓練prompt](docs/q3.md)
+### [如何產生訓練prompt](docs/q3.md)
 
-[The caller does not have permisson](docs/q4.md)
+### [The caller does not have permisson](docs/q4.md)
 
-[No such file or directory: 'config.json/channel.json'](docs/q5.md)
+### [No such file or directory: 'config.json/channel.json'](docs/q5.md)
 
-[Gemini不同模型的選擇](docs/q6.md)
+### [Gemini不同模型的選擇](docs/q6.md)
 
 
 
