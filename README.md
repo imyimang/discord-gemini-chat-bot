@@ -16,6 +16,7 @@
 pip install -U -r requirements.txt
 ```
 將prompt放入Def.py(可略過) [教學](docs/q3.md)
+
 執行 `main.py` or `main_whitelist.py`
 
 # 介紹
