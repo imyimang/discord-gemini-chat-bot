@@ -1,3 +1,4 @@
+# Gemini Discord Bot
 這是一個利用google開發的gemini模型的api來連接discord機器人的Chat bot
 
 * 頻道具有黑白名單兩種模式(請見**常見問題**)
@@ -10,7 +11,7 @@
 
 * 能通過爬蟲簡單理解網址內容
 
-# 前置作業
+## 前置作業
 將需要的機器人設定填入config.json中
 ```
 pip install -U -r requirements.txt
@@ -19,7 +20,7 @@ pip install -U -r requirements.txt
 
 執行 `main.py` or `main_whitelist.py`
 
-# 介紹
+## 介紹
 ### [運作原理](docs/principles.md)
 
 ### [指令](docs/commands.md)
