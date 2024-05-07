@@ -6,10 +6,8 @@ from discord.ext import commands, tasks
 import json
 import aiohttp
 from itertools import cycle
-from Def import history #從Def.py導入history函式(主要是我不想要檔案太長,你想要把函式放到這個檔案也可以)
-from Def import gen_image #導入gen_image函式
-from spider import islink
-from spider import gettitle
+from Def import history,gen_image #導入函式
+from spider import islink,gettitle
 
 #如果你想要看懂整個程式
 #建議去科普一下json檔,python字典,python函式的運作原理
@@ -196,7 +194,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
       print(f"Channel id: {msg.channel.id}")
     #==========================================
     
-    dt1 = datetime.utcnow().replace(tzinfo=timezone.utc) 
+    dt1 = datetime.datetime.now(datetime.UTC)
     dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  #定義一個時間變數(寫message log用的,如果沒有要用message log可以不用這兩行)
 
     dc_msg = clean_discord_message(msg.content) #將訊息內容放入clean_discord_message(下面會講),簡單來說就是更改訊息的格式,然後把回傳結果放入dc_msg變數
