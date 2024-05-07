@@ -45,46 +45,49 @@ async def on_message(msg):   #如果有訊息發送就會觸發
           return
     
     if msg.content.lower() == "closechannel":   #如果訊息內容="closechannel"就執行下面
-        channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
-        with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
-        
-        #此處的json檔就是白名單列表的概念
+        if not isinstance(msg.channel, discord.DMChannel):
+            channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
+            with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
+            
+            #此處的json檔就是白名單列表的概念
 
-            data = json.load(file)   #定義data為json檔案裡面讀到的資料
-        channel_list = data.get("id", [])   #定義channel_list為json裡面鍵值為"id"的資料,如果沒有這個資料就返回空的列表
-        
-        if str(msg.channel.id) in channel_list: #如果channel id在channel_list裡面(因為這個json檔只有存一個鍵值,所以基本上就是在json檔裡面的意思)
-            channel_list.remove(channel_id)   #從json檔裡面移除channel_id(就是頻道id)這個資料
-            await msg.reply("頻道已關閉AI聊天")
+                data = json.load(file)   #定義data為json檔案裡面讀到的資料
+            channel_list = data.get("id", [])   #定義channel_list為json裡面鍵值為"id"的資料,如果沒有這個資料就返回空的列表
+            
+            if str(msg.channel.id) in channel_list: #如果channel id在channel_list裡面(因為這個json檔只有存一個鍵值,所以基本上就是在json檔裡面的意思)
+                channel_list.remove(channel_id)   #從json檔裡面移除channel_id(就是頻道id)這個資料
+                await msg.reply("頻道已關閉AI聊天")
+            else:
+                await msg.reply("該頻道並未開啟AI聊天")    
+
+            data["id"] = channel_list
+            with open('channel.json', 'w', encoding='utf-8') as file:
+                json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
+            return 
         else:
-            await msg.reply("該頻道並未開啟AI聊天")    
-
-        data["id"] = channel_list
-        with open('channel.json', 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
-        return 
+            await msg.reply("請在伺服器中使用此指令")
 
     if msg.content.lower() == "openchannel":  #如果訊息內容="openchannel"就執行下面
-        channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
-       
-
-
-        with open('channel.json', 'r', encoding='utf-8') as file:
-            data = json.load(file)  #打開json檔
-        channel_list = data.get("id", [])  #取得json檔裡面的資料
+        if not isinstance(msg.channel, discord.DMChannel):
+            channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
+            with open('channel.json', 'r', encoding='utf-8') as file:
+                data = json.load(file)  #打開json檔
+            channel_list = data.get("id", [])  #取得json檔裡面的資料
 
 
 
-        if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
-           await msg.reply("該頻道已經開啟AI聊天了")
-           return
-        channel_list.append(channel_id)  #如果json裡面沒有此頻道id,就把此頻道id加入json檔
-        data["id"] = channel_list
-        with open('channel.json', 'w', encoding='utf-8') as file:
-            json.dump(data, file, ensure_ascii=False, indent=2)  #儲存變更
-        await msg.reply("頻道已成功開啟AI聊天")
-        return
-    
+            if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
+                await msg.reply("該頻道已經開啟AI聊天了")
+                return
+            channel_list.append(channel_id)  #如果json裡面沒有此頻道id,就把此頻道id加入json檔
+            data["id"] = channel_list
+            with open('channel.json', 'w', encoding='utf-8') as file:
+                json.dump(data, file, ensure_ascii=False, indent=2)  #儲存變更
+            await msg.reply("頻道已成功開啟AI聊天")
+            return
+        else:
+            await msg.reply("請在伺服器中使用此指令")
+
     channel_id = str(msg.channel.id) #定義變數channel_id
     with open('channel.json', 'r', encoding='utf-8') as file:
         data = json.load(file)  #開啟json檔
@@ -148,7 +151,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 
     # 就是print出來訊息的詳細資料 可以不用加
     #==========================================
-    if isinstance(msg.channel, discord.TextChannel):
+    if not isinstance(msg.channel, discord.DMChannel):
       print(f"Server name:{msg.guild.name}")
     else:
         print(f"Server name:私訊")
@@ -156,13 +159,11 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     print(f"Message Content: {msg.content}")
     print(f"Author ID: {msg.author.id}")
     print(f"Author Name: {msg.author.name}")
-    if isinstance(msg.channel, discord.TextChannel):
+    if not isinstance(msg.channel, discord.DMChannel):
       print(f"Channel name: {msg.channel.name}")
       print(f"Channel id: {msg.channel.id}")
     #==========================================
     
-    dt1 = datetime.utcnow().replace(tzinfo=timezone.utc) 
-    dt2 = dt1.astimezone(timezone(timedelta(hours=8)))  #定義一個時間變數(寫message log用的,如果沒有要用message log可以不用這兩行)
 
     dc_msg = clean_discord_message(msg.content) #將訊息內容放入clean_discord_message(下面會講),簡單來說就是更改訊息的格式,然後把回傳結果放入dc_msg變數
     dc_msg = "使用者說:" + dc_msg 

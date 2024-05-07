@@ -45,7 +45,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
           return
     
     if msg.content.lower() == "unblockchannel":   #如果訊息內容="unblockchannel"就執行下面
-        if isinstance(msg.channel, discord.TextChannel):
+        if not isinstance(msg.channel, discord.DMChannel):
             channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
             with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
             
@@ -68,7 +68,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 
 
     if msg.content.lower() == "blockchannel":  #如果訊息內容="blockchannel"就執行下面
-       if isinstance(msg.channel, discord.TextChannel):
+       if not isinstance(msg.channel, discord.DMChannel):
         channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
         
         
@@ -102,7 +102,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
         channel_list = data.get("id", []) #定義channel_list為json裡面的資料
 
 
-        if isinstance(msg.channel, discord.TextChannel):
+        if not isinstance(msg.channel, discord.DMChannel):
             guild = msg.guild
             channel_list = data.get("id", [])
             for channel in guild.channels:
@@ -181,7 +181,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
 
     # 就是print出來訊息的詳細資料 可以不用加
     #==========================================
-    if isinstance(msg.channel, discord.TextChannel):
+    if not isinstance(msg.channel, discord.DMChannel):
       print(f"Server name:{msg.guild.name}")
     else:
         print(f"Server name:私訊")
@@ -189,7 +189,7 @@ async def on_message(msg):   #如果有訊息發送就會觸發
     print(f"Message Content: {msg.content}")
     print(f"Author ID: {msg.author.id}")
     print(f"Author Name: {msg.author.name}")
-    if isinstance(msg.channel, discord.TextChannel):
+    if not isinstance(msg.channel, discord.DMChannel):
       print(f"Channel name: {msg.channel.name}")
       print(f"Channel id: {msg.channel.id}")
     #==========================================
