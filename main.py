@@ -1,253 +1,273 @@
-import re
-from datetime import datetime,timezone,timedelta
+# 如果你想要看懂整個程式
+# 建議去科普一下 json 檔, Python 字典, Python 函式的運作原理
+
 import discord
-import google.generativeai as genai
 from discord.ext import commands, tasks
-import json
-import aiohttp
+
+import re, json, aiohttp
 from itertools import cycle
-from Def import history,gen_image #導入函式
-from spider import islink,gettitle
+from Def import call_api, gen_image
+from spider import islink, gettitle # 從 Def.py 和 spider.py 中導入函式
 
-#如果你想要看懂整個程式
-#建議去科普一下json檔,python字典,python函式的運作原理
+# ==================================================
 
+def update_message_history(channel_id: int, text: str) -> None:
+    '''
+    更新短期記憶
+    '''
+    if channel_id not in log: log[channel_id] = [] # 如果 channle_id 不在在字典裡面則創建
+    log[channel_id].append(text) # 把 text 加入以 channle_id 命名的鍵中
 
-log = {} #創建一個名稱叫log的字典 用來存放短期記憶
-data = json.load(open("config.json", encoding="utf-8")) #讀取config的資料
+    if len(log[channel_id]) > int(data['memory_max']): # 如果 channle_id 裡面存的資料大於 config 中的記憶上限
+        log[channel_id].pop(0) # 就 pop 最早的一筆資料
 
-bot = commands.Bot(command_prefix=data["prefix"], intents=discord.Intents.all()) #設定discord bot
+def format_discord_message(input_string: str) -> str:
+    '''
+    刪除並回傳 Disord 聊天訊息中位於 < 和 > 之間的文字 (讓他能夠放入短期記憶並被 AI 讀懂)
+    '''
+    bracket_pattern = re.compile(r'<[^>]+>')
+    cleaned_content = bracket_pattern.sub('', input_string)
+    return cleaned_content
 
+def get_message_history(channel_id: int) -> str | None:
+    '''
+    回傳指定頻道的短期記憶
+    '''
+    if channel_id in log: # 如果 channel_id 有在 log 字典裏面
+        return '\n\n'.join(log[channel_id])
 
-status = cycle(['Gemini chat bot', '我是ai機器人', '正在聊天']) #機器人顯示的個人狀態(可自行更改,要刪除這行也可以)
+async def split_and_edit_message(msg: discord.Message, bot_msg: discord.Message, text: str, max_length: int) -> None:
+    '''
+    拆分並編輯訊息
+    '''
+    messages = []
+    for i in range(0, len(text), max_length):
+        sub_message = text[i:i+max_length] # 如果訊息長度超過 max_length 就把他拆開
+        messages.append(sub_message)
 
+    for string in messages:
+        await bot_msg.edit(content=string)
+        print(f'已分析完畢 {msg.author.name} 的圖片。')
 
-@tasks.loop(seconds=10)  # 每隔10秒更換一次機器人個人狀態
+def load_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
+    '''
+    讀取並回傳資料
+    '''
+    channel_id = str(channel.id) # 定義變數 channel_id
+
+    with open('channel.json', 'r', encoding='utf-8') as file: # 打開 json 檔案
+        data: dict = json.load(file)
+
+    if 'id' not in data:
+        data['id'] = []
+        save_data(data)
+
+    channel_list: list = data['id'] # 定義 channel_list 為 json 裡面鍵值為 'id' 的資料
+
+    return channel_id, channel_list
+
+def save_data(data: dict):
+    '''
+    儲存檔案
+    '''
+    with open('channel.json', 'w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+# ==================================================
+
+log: dict[int, list[str]] = {} # 創建一個名稱叫 log 的字典, 用來存放短期記憶
+data: dict = json.load(open('config.json', encoding='utf-8')) # 讀取 config 的資料
+
+mode = data.get('mode', '')
+
+while True:
+    if mode in ['whitelist', 'blacklist']: break
+
+    mode = input('不明的模式，模式應為 "whitelist" 或 "blacklist"\n輸入執行模式: ')
+
+data['mode'] = mode
+save_data(data)
+
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(data['prefix']), intents=discord.Intents.all()) # 設定 Discord bot, prefix 可以自己改
+
+status = cycle(['Gemini chat bot', '我是 AI 機器人', '正在聊天']) # 機器人顯示的個人狀態 (可自行更改, 要刪除這行也可以)
+
+@tasks.loop(seconds=10) # 每隔 10 秒更換一次機器人個人狀態
 async def change_status():
     await bot.change_presence(activity=discord.Game(next(status)))
 
-
 @bot.event
 async def on_ready():
-    print(f'{bot.user} 已上線！')
-    change_status.start() #讓機器人顯示狀態
+    print(f'{bot.user} 已上線，正在執行 {"白名單" if mode == "whitelist" else "黑名單"} 模式！')
+    change_status.start() # 讓機器人顯示狀態
 
+if mode == 'whitelist':
+    @bot.command()
+    @commands.guild_only()
+    async def openchannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+        '''
+        新增白名單內頻道
+        '''
+        channel = channel or ctx.channel
 
-@bot.event
-async def on_message(msg):   #如果有訊息發送就會觸發
+        channel_id, channel_list = load_data(channel)
 
-    if msg.author == bot.user:   #如果訊息發送者是自己就不再執行下面的程式
-        return
-    if isinstance(msg.channel, discord.TextChannel):   #如果訊息在文字頻道就執行下面
-      can_send = msg.channel.permissions_for(msg.guild.me).send_messages   #can_send用來檢查頻道是否有發言權限
-      if bool(can_send) != True:   #如果機器人沒有發言權限就不執行下面程式
-          print("沒有權限在此頻道發言")
-          return
-    
-    if msg.content.lower() == "unblockchannel":   #如果訊息內容="unblockchannel"就執行下面
-        if not isinstance(msg.channel, discord.DMChannel):
-            channel_id = str(msg.channel.id)   #定義channel_id為發送訊息的頻道id
-            with open('channel.json', 'r', encoding='utf-8') as file:   #打開json檔案
-            
-            #此處的json檔就是黑名單列表的概念
+        if channel_id not in channel_list: # 如果頻道 id 未被記錄在 json 檔案
+            channel_list.append(channel_id) # 新增 channel_id 這筆資料
 
-                data = json.load(file)   #定義data為json檔案裡面讀到的資料
-            channel_list = data.get("id", [])   #定義channel_list為json裡面鍵值為"id"的資料,如果沒有這個資料就返回空的列表
-            
-            if str(msg.channel.id) in channel_list: #如果channel id在channel_list裡面(因為這個json檔只有存一個鍵值,所以基本上就是在json檔裡面的意思)
-                channel_list.remove(channel_id)   #從json檔裡面移除channel_id(就是頻道id)這個資料
-                await msg.reply("頻道已解除屏蔽")
+            data['id'] = channel_list
+            save_data(data)
 
-            data["id"] = channel_list
-            with open('channel.json', 'w', encoding='utf-8') as file:
-                json.dump(data, file, ensure_ascii=False, indent=2)   #儲存上面json檔變更的內容
-            return 
-        else:
-            await msg.reply("請在伺服器中使用此指令")
-            return
+        await ctx.reply('頻道已成功開啟 AI 聊天。', mention_author=False)
 
+    @bot.command()
+    @commands.guild_only()
+    async def closechannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+        '''
+        移除白名單內頻道
+        '''
+        channel = channel or ctx.channel
 
-    if msg.content.lower() == "blockchannel":  #如果訊息內容="blockchannel"就執行下面
-       if not isinstance(msg.channel, discord.DMChannel):
-        channel_id = str(msg.channel.id)  #定義channel_id變數為頻道id
-        
-        
+        channel_id, channel_list = load_data(channel)
 
-        with open('channel.json', 'r', encoding='utf-8') as file:
-            data = json.load(file)  #打開json檔
-        channel_list = data.get("id", [])  #定義channel_list為json檔裡面的資料
+        if channel_id in channel_list: # 如果頻道 id 已被記錄在 json 檔案
+            channel_list.remove(channel_id) # 移除 channel_id 這筆資料
 
+            data['id'] = channel_list
+            save_data(data)
 
+        await ctx.reply('頻道已成功關閉 AI 聊天。', mention_author=False)
 
-        if str(msg.channel.id) in channel_list: #如果頻道id已經記錄在json檔案裡面的話就執行下面
-            await msg.reply("該頻道已被屏蔽")
-            return
-        channel_list.append(channel_id)  #如果json裡面沒有此頻道id,就把此頻道id加入json檔
-        data["id"] = channel_list
-        with open('channel.json', 'w', encoding='utf-8') as file:
-                json.dump(data, file, ensure_ascii=False, indent=2)  #儲存變更
-        await msg.reply("頻道已成功屏蔽")
-        return
-       else:
-            await msg.reply("請在伺服器中使用此指令")
-            return
-       
-    
+elif mode == "blacklist":
+    @bot.command()
+    @commands.guild_only()
+    async def blockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+        '''
+        新增黑名單內頻道
+        '''
+        channel = channel or ctx.channel
 
-    if msg.content.lower() == "blockserver":
+        channel_id, channel_list = load_data(channel)
 
-    
-        with open('channel.json', 'r', encoding='utf-8') as file:
-            data = json.load(file)  # 讀取json檔
-        channel_list = data.get("id", []) #定義channel_list為json裡面的資料
+        if channel_id not in channel_list: # 如果頻道 id 未被記錄在 json 檔案
+            channel_list.append(channel_id) # 新增 channel_id 這筆資料
 
+            data['id'] = channel_list
+            save_data(data)
 
-        if not isinstance(msg.channel, discord.DMChannel):
-            guild = msg.guild
-            channel_list = data.get("id", [])
-            for channel in guild.channels:
-                if str(channel.id) not in channel_list:
-                    channel_list.append(str(channel.id))  #將伺服器所有的頻道id輸入到json中
+        await ctx.reply('頻道已成功屏蔽。', mention_author=False)
 
-            with open('channel.json', 'w', encoding='utf-8') as json_file:
-                json.dump({"id": channel_list}, json_file, indent=2)
+    @bot.command()
+    @commands.guild_only()
+    async def unblockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+        '''
+        移除黑名單內頻道
+        '''
+        channel = channel or ctx.channel
 
-            await msg.reply("已封鎖此伺服器所有頻道")
-            print(f"已封鎖此 {msg.guild.name} 上所有頻道")
-            return
-        else:
-            await msg.reply("請在伺服器中使用此指令")
-            return
+        channel_id, channel_list = load_data(channel)
 
-    channel_id = str(msg.channel.id) #定義變數channel_id
-    with open('channel.json', 'r', encoding='utf-8') as file:
-        data = json.load(file)  #開啟json檔
-    channel_list = data.get("id", [])
-    if channel_id in channel_list:  #如果頻道id在json檔裡面
-        return #就不執行下面程式
+        if channel_id in channel_list: # 如果頻道 id 已被記錄在 json 檔案
+            channel_list.remove(channel_id) # 移除 channel_id 這筆資料
 
-    if msg.content.lower() == "reset": #如果訊息內容="reset"
-        if msg.channel.id in log:
-            del log[msg.channel.id] #清空短期記憶
-            await msg.reply("您的短期記憶已清空")            
-           
-        else:
-            await msg.reply("並無儲存的短期記憶")
-        return
+            data['id'] = channel_list
+            save_data(data)
 
-    if msg.attachments: #如果訊息中有檔案舊執行下面
+        await ctx.reply('頻道已成功解除屏蔽。', mention_author=False)
 
-        
-        for attachment in msg.attachments: 
-            
-            if any(attachment.filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp']): #檢測副檔名
-                
+@bot.command()
+async def reset(ctx: commands.Context, channel: discord.abc.GuildChannel):
+    '''
+    清空頻道短期記憶
+    '''
+    channel = channel or ctx.channel
 
+    if channel.id in log:
+        del log[channel.id] # 清空短期記憶
+        await ctx.reply(f'{channel.mention} 的短期記憶已清空。', mention_author=False)
+    else:
+        await ctx.reply('並無儲存的短期記憶。', mention_author=False)
+
+@bot.listen('on_message')
+async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
+    if msg.author.bot: return # 忽略機器人
+    if msg.guild is None: return # 如果訊息不是在伺服器中發送就不再執行下方程式
+
+    command = msg.content.removeprefix(bot.command_prefix) # 移除掉前面的前綴
+    if command in bot.commands: return # 如果訊息為指令就不再執行下方程式
+
+    can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
+    if not can_send: # 如果機器人沒有發言權限
+        print(f'沒有權限在此頻道 ({msg.channel.name}) 發言。')
+        return # 不再執行下方程式
+
+    channel_id, channel_list = load_data(msg.channel)
+
+    if (mode == 'whitelist' and channel_id not in channel_list) or (mode == 'blacklist' and channel_id in channel_list): return # 判斷頻道 id 是否在 channel_list 裡面
+
+    if msg.attachments: # 如果訊息中有檔案
+        for attachment in msg.attachments: # 遍歷訊息中檔案
+            if any(attachment.filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp']): # 檢測副檔名
                 async with aiohttp.ClientSession() as session:
-                    async with session.get(attachment.url) as resp: #讀取圖片的url並將他用aiohttp函式庫轉換成數據
+                    async with session.get(attachment.url) as resp: # 讀取圖片的 url 並將他用 aiohttp 函式庫轉換成數據
                         if resp.status != 200:
-                            await msg.reply('圖片載入失敗', allowed_mentions=discord.AllowedMentions.none()) #如果圖片分析失敗就不執行後面
+                            await msg.reply('圖片載入失敗。', mention_author=False) # 如果圖片分析失敗就不再執行下方程式
                             return
-                        bot_msg = await msg.reply("正在分析圖片", allowed_mentions=discord.AllowedMentions.none())
-                        print(f"正在分析{msg.author.name}的圖片")
-                        image_data = await resp.read()  #定義image_data為aiohtp回應的數據
-                        dc_msg = clean_discord_message(msg.content) #格式化訊息
-                        response_text = await gen_image(image_data, dc_msg) #用gen_image函式來發送圖片數據跟文字給api
-                        await split_and_send_messages(msg, bot_msg, response_text, 1700) #如果回應文字太長就拆成兩段
+
+                        print(f'正在分析 {msg.author.name} 的圖片...')
+                        bot_msg = await msg.reply('正在分析圖片...', mention_author=False)
+                        image_data = await resp.read() # 定義 image_data 為 aiohttp 回應的數據
+                        dc_msg = format_discord_message(msg.content) # 格式化訊息
+                        response_text = await gen_image(image_data, dc_msg) # 用 gen_image 函式來發送圖片數據跟文字給 api
+                        await split_and_edit_message(msg, bot_msg, response_text, 1700) # 如果回應文字太長就拆成兩段
                         return
 
-#通過爬蟲來獲取網址網站標題，進行簡單的連結判讀
+        # 通過爬蟲來獲取網址網站標題, 進行簡單的連結判讀
         links = islink(msg.content)
-        #如果訊息內容有連結
-        if links:
+        if links: # 如果訊息內容有連結
             links = '\n'.join(links)
-            title = gettitle(links) #取得連結中的title
+            title = gettitle(links) # 取得連結中的 title
             if title:
-                word = msg.content.replace(links, f"(一個網址，網址標題是:'{title}')")
-                reply_text =f"「{msg.author.name}」說:「'{word}'」"  #將連結網站的title放入短期記憶
+                word = msg.content.replace(links, f'(一個網址, 網址標題是: "{title}")')
+                reply_text = f'「{msg.author.name}」 : "{word}"' # 將連結網站的 title 放入短期記憶
             else:
-                word = msg.content.replace(links, "(一個網址，網址無法辨識)")
-                reply_text = f"「{msg.author.name}」說:{word}"
+                word = msg.content.replace(links, '(一個網址, 網址無法辨識)')
+                reply_text = f'「{msg.author.name}」 : "{word}"'
 
             await update_message_history(msg.channel.id, reply_text)
-            reply_text = await history(get_formatted_message_history(msg.channel.id))
-            await msg.reply(reply_text, allowed_mentions=discord.AllowedMentions.none())
+            reply_text = await call_api(get_message_history(msg.channel.id))
+            await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none())
+
             print(reply_text)
             print(log[msg.channel.id])
             return
 
-
-
-
-    # 就是print出來訊息的詳細資料 可以不用加
-    #==========================================
+    # 就是 print 出來訊息的詳細資料, 可以不用加
+    # ==========================================
+    print(f'Server name: {msg.guild.name if not isinstance(msg.channel, discord.DMChannel) else "私訊"}')
+    print(f'Message ID: {msg.id}')
+    print(f'Message Content: {msg.content}')
+    print(f'Author ID: {msg.author.id}')
+    print(f'Author Name: {msg.author.name}')
     if not isinstance(msg.channel, discord.DMChannel):
-      print(f"Server name:{msg.guild.name}")
-    else:
-        print(f"Server name:私訊")
-    print(f"Message ID: {msg.id}")
-    print(f"Message Content: {msg.content}")
-    print(f"Author ID: {msg.author.id}")
-    print(f"Author Name: {msg.author.name}")
-    if not isinstance(msg.channel, discord.DMChannel):
-      print(f"Channel name: {msg.channel.name}")
-      print(f"Channel id: {msg.channel.id}")
-    #==========================================
-    
-    dc_msg = clean_discord_message(msg.content) #將訊息內容放入clean_discord_message(下面會講),簡單來說就是更改訊息的格式,然後把回傳結果放入dc_msg變數
-    dc_msg = f"{msg.author.name}:" + dc_msg 
-    update_message_history(msg.channel.id, dc_msg) #將dc_msg(就是使用者發送的訊息)上傳到短期記憶
+        print(f'Channel name: {msg.channel.name}')
+        print(f'Channel id: {msg.channel.id}')
+    # ==========================================
+
+    dc_msg = format_discord_message(msg.content) # 將訊息內容放入 format_discord_message, 簡單來說就是更改訊息的格式, 然後把回傳結果放入 dc_msg 變數
+    dc_msg = f'{msg.author.name}: ' + dc_msg
+    update_message_history(msg.channel.id, dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
 
     if msg.channel.id in log:
-        reply_text = await history(get_formatted_message_history(msg.channel.id)) #將頻道id放入get_formatted_message_history函式(後面會講),然後將得到的歷史資料放入history函式來得到api回應
+        reply_text = await call_api(get_message_history(msg.channel.id)) # 將頻道的 id 放入 get_message_history 函, 然後將得到的歷史資料放入 history 函式來得到 api 回應
     else:
-        reply_text = await history(msg.content)    #如果使用者沒有歷史紀錄就直接把訊息發給api
+        reply_text = await call_api(msg.content) # 如果頻道沒有歷史紀錄就直接把訊息發給 api
 
-    if "@everyone" in reply_text or "@here" in str(reply_text): #如果返回的訊息中有@everyone或@here
-       reply_text = "我不能使用這個指令!"  #就返回這段 (這兩行可以選擇刪除)
-       
-    await msg.reply(reply_text, allowed_mentions=discord.AllowedMentions.none())  #將回應回傳給使用者
-    update_message_history(msg.channel.id, reply_text) #將api的回應上傳到短期記憶
-    return
+    if any(detect in ['@everyone', '@here'] for detect in reply_text): # 如果返回的訊息中有 @everyone 或 @here
+        reply_text = '我不能使用這個指令！' # 就返回這段 (這兩行可以選擇刪除)
 
+    await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
+    reply_text = '你回應:' + reply_text
+    update_message_history(msg.channel.id, reply_text) # 將 api 的回應上傳到短期記憶
 
-
-
-
-      
-    await bot.process_commands(msg)
-
-      
-def update_message_history(channel_id, text): #定義update_message_history函式
-    if channel_id in log:  #如果user_id在字典裡面
-        log[channel_id].append(text)   #就把text加入以user_id命名的鍵中
-        if len(log[channel_id]) > int(data["memory_max"]): #如果user_id裡面存的資料大於config中的記憶上限
-            log[channel_id].pop(0) #就pop最早的一筆資料
-    else:
-        log[channel_id] = [text] #如果user_id不在字典裡就創建一個,並把text放入
-
-def clean_discord_message(input_string): #刪除 Discord 聊天訊息中位於 < 和 > 之間的文字(讓他能夠放入短期記憶並被ai讀懂)
-    bracket_pattern = re.compile(r'<[^>]+>')
-    cleaned_content = bracket_pattern.sub('', input_string)
-    return cleaned_content  #返回更改格式後的字串
-    
-def get_formatted_message_history(channel_id):
-    if channel_id in log: #如果user_id有在log字典裏面
-        return '\n\n'.join(log[channel_id]) #返回user_id裡面存放的內容
-
-
-async def split_and_send_messages(msg, bot_msg, text, max_length):
-
-
-    messages = []
-    for i in range(0, len(text), max_length):
-        sub_message = text[i:i+max_length]  #如果訊息長度超過max_length就把他拆開
-        messages.append(sub_message)
-
-
-    for string in messages:
-        await bot_msg.edit(content = string)
-        print(f"已分析完畢{msg.author.name}的圖片")
-
-    
-bot.run(data["token"])  
+bot.run(data['token'])
