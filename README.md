@@ -27,6 +27,8 @@ pip install -U -r requirements.txt
 
 ### [檔案說明](docs/files.md)
 
+### [更新日誌](docs/log.md)
+
 # 常見問題
 ### [我想要把 channel.json 改成頻道白名單而不是黑名單怎麼辦?](docs/q1.md)
 
