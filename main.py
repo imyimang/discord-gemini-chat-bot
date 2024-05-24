@@ -90,7 +90,7 @@ save_data(data)
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(data['prefix']), intents=discord.Intents.all()) # 設定 Discord bot, prefix 可以自己改
 
-status = cycle(['Gemini chat bot', '我是 AI 機器人', '正在聊天']) # 機器人顯示的個人狀態 (可自行更改, 要刪除這行也可以)
+status = cycle(['Gemini chat bot', '我是 AI 機器人', '正在聊天']) #機器人顯示的個人狀態,可自行更改
 
 @tasks.loop(seconds=10) # 每隔 10 秒更換一次機器人個人狀態
 async def change_status():
