@@ -16,7 +16,7 @@
 ```
 pip install -U -r requirements.txt
 ```
-將 prompt 放入 Def.py (可略過) [教學](docs/q3.md)
+將 prompt 放入 `Def.py` (可略過) [教學](docs/q3.md)
 
 執行 `main.py`
 
