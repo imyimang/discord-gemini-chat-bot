@@ -12,7 +12,7 @@
 * 能通過爬蟲簡單理解網址內容
 
 # 前置作業
-將需要的機器人設定填入 config.json 中
+將需要的機器人設定填入 `config.json` 中
 ```
 pip install -U -r requirements.txt
 ```
