@@ -41,3 +41,9 @@ pip install -U -r requirements.txt
 ### [No such file or directory: 'config.json/channel.json'](docs/q5.md)
 
 ### [Gemini 不同模型的選擇](docs/q6.md)
+
+
+# 參考資料
+### [Echoshard/Gemini_Discordbot](https://github.com/Echoshard/Gemini_Discordbot)
+
+### [peter995peter/discord-gemini-ai](https://github.com/peter995peter/discord-gemini-ai)
