@@ -1,7 +1,7 @@
 ## The caller does not have permisson
 
-當你點擊 "Create API key" 的時候，可能會出現下面的錯誤
+When you click "Create API key," you might encounter the following error.
 
 **The caller does not have permisson**
 
-這可能是由於你刪除了你的前一個 api key。建議用另一個沒創過 api key 的帳號，重新創建一個 api key。
+This might be because you deleted your previous API key. It's recommended to create a new API key with another account that hasn't created an API key before.

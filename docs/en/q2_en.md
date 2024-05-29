@@ -1,17 +1,17 @@
-## 如何取得 Gemini api key?
+## How to get Gemini api key
 
-1. 前往 Gemini的網站 [**點我**](<https://makersuite.google.com/>)
+1. Visit the Gemini website. [**click me**](<https://makersuite.google.com/>)
 
-2. 登入你的 Google 帳號 (要帳戶年滿 18 歲) [**詳情點我**](<https://ai.google.dev/available_regions?hl=zh-tw>)
+2. Log in to your Google account (account must be at least 18 years old) [**Click here for details**](<https://ai.google.dev/available_regions?hl=zh-tw>)
 
-3. 打勾同意用戶條款然後按繼續
+3. Check the box to agree to the terms of service and then click "Continue".
 ![圖1](../images/1.png)
 
-4. 點 "Get API key"
+4. Click "Get API key"
 ![圖2](../images/2.png)
 
-5. 點 "Create API key" (如果還沒有建立專案就點 "create api key in new project")
+5. Click "Create API key" (if you don't have project yet then click "create api key in new project")
 ![圖3](../images/3.png)
 
-6. 這樣就得到 API key 了，點 "Copy" 就能複製
+6. You've now obtained the API key. Click "Copy" to copy it.
 ![圖4](../images/4.png)

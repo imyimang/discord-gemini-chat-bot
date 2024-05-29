@@ -1,33 +1,33 @@
-## 如何產生訓練 prompt?
-1. 前往 Gemini 的網站 [**點我**](<https://makersuite.google.com/>)
+## How to generate prompts for training
+1. Visit the Gemini website. [**click me**](<https://makersuite.google.com/>)
 
-2. 點 "Create new"，然後選 "Chat prompt"
+2. Click "Create new"，then choose "Chat prompt"
 ![圖5](../images/5.png)
 
-3.先隨便打點東西然後按 "Save"
+3.Write something and click "Save"
 ![圖6](../images/6.png)
-名字不取也沒關係可以直接按 "Save"
+You can directly click "Save" without naming if you prefer.
 
-4.匯出你的prompt
-點擊右上角的 "Get code" 就能匯出
+4.Export your prompt.
+Click "Get code" to export
 ![圖7](../images/7.png)
 
-選 "Python" 然後往下滑一點
+Choose "Python" 
 
-這段就是你的prompt了
+This segment is your prompt.
 ![圖9](../images/8.png)
 
-5.回到 Def.py
+5.Go back to Def.py
 
 ![圖11](../images/9.png)
 
-把框起來的那段換成自己的 prompt 就可以囉
+You just need to replace the highlighted segment with your own prompt.
 
 ![圖12](../images/10.png)
 
-* "User" 的地方就是你要問的問題
-* "Model" 的地方就是你想要他怎麼回答
+* "User" is the question you want to ask
+* "Model" is where you specify how you want it to respond
 
-也可以直接用對話紀錄然後把你想要模擬的對象放在 "Model" 的地方，自己放在 "User" 的地方
+You can also directly use conversation transcripts and place the entity you want to simulate under "Model" and yourself under "User".
 
-只要複製 prompt 的格式並且更改裡面內容即可
+Simply copy the format of the prompt and change the content inside.
