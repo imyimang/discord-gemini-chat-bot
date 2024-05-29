@@ -1,6 +1,6 @@
 # Gemini Discord Bot
 
-[English](README_EN.md) | 繁體中文 
+## [English](README_EN.md) | 繁體中文 
 
 這是一個利用 Google 開發的 Gemini 模型的 api 來連接 Discord 機器人的 Chat bot
 
