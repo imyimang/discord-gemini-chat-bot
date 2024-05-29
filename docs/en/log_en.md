@@ -1,4 +1,4 @@
 - 2024/5/23
-    - 將黑白名單合併到main.py
-    - 優化排版
-    - 將指令改為前綴指令
+    - Merge main_whitelist.py into main.py
+    - Optimize the formatting
+    - Change the commands to prefixed commands

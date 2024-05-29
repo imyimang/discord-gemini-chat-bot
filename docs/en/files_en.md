@@ -1,8 +1,8 @@
-## 檔案說明
-- main.py 機器人主程式
-- Def.py ai生成回覆函式，用來發送api請求和存放prompt等設定 
-- spider.py 爬蟲函式，用來處理含有連結的訊息並進行判讀
-- channel.json 用來存放頻道黑名單或白名單
-- config.json 用來存放機器人設定
+## File description
+- main.py ➡️ Main program of the bot
+- Def.py ➡️ AI reply generation function, used for sending API requests and storing settings such as prompts.
+- spider.py ➡️ Web scraping function, used to process messages containing links and perform interpretation.
+- channel.json ➡️ Used to store channel blacklists or whitelists.
+- config.json ➡️ Used to store bot settings
 
-Discord.py版本 `2.3.2`
+Discord.py version `2.3.2`

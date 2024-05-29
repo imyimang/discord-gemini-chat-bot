@@ -1,13 +1,12 @@
-機器人記憶是用 Python 字典的格式來儲存在記憶體中，channel.json 則負責記憶頻道黑/白名單。
+The bot's memory is stored in the form of Python dictionaries in memory, while channel.json is responsible for storing channel blacklists/whitelists.
 
-## 記憶邏輯
-格式如下
+## Memory principle
 ```py
-{'頻道id1': 'value1', '頻道id2': 'value2', '頻道id3': 'value3'}
+{'channel_id1': 'value1', 'channel_id2': 'value2', 'channel_id3': 'value3'}
 ```
-當用戶發送訊息時，會將訊息儲存到字典中頻道 id 對應的 value，然後再將值發送給api，藉此達成短期記憶的能力。
+When a user sends a message, the message is stored in a dictionary with the channel ID corresponding to the value, and then the value is sent to the API, thus achieving the ability of short-term memory.
 
-**不過並非長期記憶，只要重開機記憶體裡面的資料就會消失。**
+**It's not long-term memory; the data in memory will disappear once the system restarts.**
 
-## 流程圖
+## Flowchart
 ![alt text](../images/12.jpg)
