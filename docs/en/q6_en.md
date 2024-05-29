@@ -1,28 +1,27 @@
-## Gemini 不同模型的選擇
-近期 Gemini 有釋出了免費的 1.0 和 1.5 版本，都是可以免費使用，相關的限速限制如下圖
+## Choosing between different models in Gemini
+Gemini released free versions 1.0 and 1.5, both of which are free to use. The relevant rate limits are as shown in the image below.
 ![圖13](../images/11.png)
 
-如果是使用免費版本的話建議使用 1.0，1.5 雖然模型經過優化但限速很嚴重。
+If you're using the free version, it's recommended to use 1.0. Although 1.5 has optimized models, its rate limits are quite strict.
 
-更改模型只要到 Def.py 的
+To change the model, simply go to Def.py
 ```py
 ...
 
-model = genai.GenerativeModel(model_name='gemini-1.0-pro', generation_config=generation_config, safety_settings=safety_settings) # 設定模型, 這邊不用動他
+model = genai.GenerativeModel(model_name='gemini-1.0-pro', generation_config=generation_config, safety_settings=safety_settings) 
 
 image_model = genai.GenerativeModel(model_name='gemini-pro-vision', generation_config=generation_config, safety_settings=safety_settings)
 
 ...
 ```
-這一段
+This part
 
-將
+Change
 ```py
 model_name='gemini-1.0-pro'
 ```
-更改為
+to
 ```py
 model_name='gemini-1.5-pro'
 ```
-即可
-可以根據自身想要的模型做更改。
+You can make changes according to the model you want.
