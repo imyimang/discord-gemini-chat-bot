@@ -32,7 +32,7 @@ Run `main.py`
 
 ### [Development log](docs/en/log_en.md)
 
-# FQA
+# FAQ
 ### [How to change mode from blacklist to whitelist](docs/en/q1_en.md)
 
 ### [How to get Gemini api key](docs/en/q2_en.md)
