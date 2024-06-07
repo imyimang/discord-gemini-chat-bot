@@ -14,7 +14,7 @@ def gettitle(website_url: str) -> str | None:
 
         print(f'The title of the website is: {title}') # 印出 title
         return title
-    except Exception as e:
+    except Exception:
         return None
 
 def islink(content: str) -> str: # 判定訊息是否是連結
