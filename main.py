@@ -53,8 +53,6 @@ def load_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
     '''
     讀取並回傳資料
     '''
-    channel_id = str(channel.id) # 定義變數 channel_id
-
     with open('channel.json', 'r', encoding='utf-8') as file: # 打開 json 檔案
         data: dict = json.load(file)
 
@@ -64,7 +62,7 @@ def load_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
 
     channel_list: list = data['id'] # 定義 channel_list 為 json 裡面鍵值為 'id' 的資料
 
-    return channel_id, channel_list
+    return str(channel.id), channel_list
 
 def save_data(data: dict):
     '''
@@ -88,7 +86,7 @@ while True:
 data['mode'] = mode
 save_data(data)
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or(data['prefix']), intents=discord.Intents.all()) # 設定 Discord bot, prefix 可以自己改
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(data['prefix']), intents=discord.Intents.all()) # 設定 Discord bot
 
 status = cycle(['Gemini chat bot', '我是 AI 機器人', '正在聊天']) #機器人顯示的個人狀態,可自行更改
 
@@ -176,7 +174,7 @@ elif mode == "blacklist":
         await ctx.reply('頻道已成功解除屏蔽。', mention_author=False)
 
 @bot.command()
-async def reset(ctx: commands.Context, channel: discord.abc.GuildChannel):
+async def reset(ctx: commands.Context, channel: discord.abc.Messageable):
     '''
     清空頻道短期記憶
     '''
@@ -190,11 +188,8 @@ async def reset(ctx: commands.Context, channel: discord.abc.GuildChannel):
 
 @bot.listen('on_message')
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
-    if msg.author.bot: return # 忽略機器人
-    if msg.guild is None: return # 如果訊息不是在伺服器中發送就不再執行下方程式
-
-    command = msg.content.removeprefix(bot.command_prefix) # 移除掉前面的前綴
-    if command in bot.commands: return # 如果訊息為指令就不再執行下方程式
+    command = msg.content.removeprefix(bot.command_prefix)
+    if msg.author.bot or (command in bot.commands): return # 忽略機器人
 
     can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
     if not can_send: # 如果機器人沒有發言權限
@@ -225,14 +220,9 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
         # 通過爬蟲來獲取網址網站標題, 進行簡單的連結判讀
         links = islink(msg.content)
         if links: # 如果訊息內容有連結
-            links = '\n'.join(links)
-            title = gettitle(links) # 取得連結中的 title
-            if title:
-                word = msg.content.replace(links, f'(一個網址, 網址標題是: "{title}")')
-                reply_text = f'「{msg.author.name}」 : "{word}"' # 將連結網站的 title 放入短期記憶
-            else:
-                word = msg.content.replace(links, '(一個網址, 網址無法辨識)')
-                reply_text = f'「{msg.author.name}」 : "{word}"'
+            title = gettitle('\n'.join(links)) # 取得連結中的 title
+            word = msg.content.replace(links, f'(一個網址, 網址標題是: "{title}")' if title else '(一個網址, 網址無法辨識)')
+            reply_text = f'「{msg.author.name}」 : "{word}"'
 
             await update_message_history(msg.channel.id, reply_text)
             reply_text = await call_api(get_message_history(msg.channel.id))
@@ -257,11 +247,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     dc_msg = format_discord_message(msg.content) # 將訊息內容放入 format_discord_message, 簡單來說就是更改訊息的格式, 然後把回傳結果放入 dc_msg 變數
     dc_msg = f'{msg.author.name}: ' + dc_msg
     update_message_history(msg.channel.id, dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
-
-    if msg.channel.id in log:
-        reply_text = await call_api(get_message_history(msg.channel.id)) # 將頻道的 id 放入 get_message_history 函, 然後將得到的歷史資料放入 history 函式來得到 api 回應
-    else:
-        reply_text = await call_api(msg.content) # 如果頻道沒有歷史紀錄就直接把訊息發給 api
+    reply_text = await call_api(get_message_history(msg.channel.id) if msg.channel.id in log else msg.content)
 
     if any(detect in ['@everyone', '@here'] for detect in reply_text): # 如果返回的訊息中有 @everyone 或 @here
         reply_text = '我不能使用這個指令！' # 就返回這段 (這兩行可以選擇刪除)
