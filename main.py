@@ -253,7 +253,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
         reply_text = '我不能使用這個指令！' # 就返回這段 (這兩行可以選擇刪除)
 
     await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
-    reply_text = '你回應:' + reply_text
+    reply_text = f'你回應{msg.author.name}:' + reply_text
     update_message_history(msg.channel.id, reply_text) # 將 api 的回應上傳到短期記憶
 
 bot.run(data['token'])
