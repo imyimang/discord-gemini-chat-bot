@@ -19,7 +19,7 @@ Fill in the required bot settings in `config.json`.
 ```
 pip install -U -r requirements.txt
 ```
-Put prompt in `Def.py` (Skippable) [Tutorial](docs/en/q3_en.md)
+Put prompt in `call_api.py` (Skippable) [Tutorial](docs/en/q3_en.md)
 
 Run `main.py`
 
