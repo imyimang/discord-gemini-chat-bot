@@ -3,7 +3,7 @@ import google.generativeai as genai
 import json
 
 data = json.load(open('config.json', encoding='utf-8'))
-genai.configure(api_key=data['api_key']) # 中間放上你的 api key 如果不知道怎麼拿api key請看文檔
+genai.configure(api_key=data['api_key'])
 
 # 模型設定, 詳細設定請去 Google
 generation_config = {
