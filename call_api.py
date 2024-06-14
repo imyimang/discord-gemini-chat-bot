@@ -39,7 +39,7 @@ image_model = genai.GenerativeModel(model_name='gemini-pro-vision', generation_c
 
 #==============================================================
 
-async def call_api(msg: str) -> str | None:
+async def text_api(msg: str) -> str | None:
     '''
     呼叫 api 並回傳他的回應
     '''
@@ -54,7 +54,7 @@ async def call_api(msg: str) -> str | None:
     print(f': {reply_text}') # print 出 api 的回應 (可省略)
     return reply_text # 將 api 的回應返還給主程式
 
-async def gen_image(image_data, text: str) -> str:
+async def image_api(image_data, text: str) -> str:
     '''
     回傳 api 對包含圖片的訊息的回應
     '''

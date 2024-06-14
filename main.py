@@ -6,8 +6,8 @@ from discord.ext import commands, tasks
 
 import re, json, aiohttp
 from itertools import cycle
-from Def import call_api, gen_image
-from spider import islink, gettitle # 從 Def.py 和 spider.py 中導入函式
+from call_api import text_api, image_api
+from spider import islink, gettitle # 從 call_api.py 和 spider.py 中導入函式
 
 # ==================================================
 
@@ -213,7 +213,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
                         bot_msg = await msg.reply('正在分析圖片...', mention_author=False)
                         image_data = await resp.read() # 定義 image_data 為 aiohttp 回應的數據
                         dc_msg = format_discord_message(msg.content) # 格式化訊息
-                        response_text = await gen_image(image_data, dc_msg) # 用 gen_image 函式來發送圖片數據跟文字給 api
+                        response_text = await image_api(image_data, dc_msg) # 用 image_api 函式來發送圖片數據跟文字給 api
                         await split_and_edit_message(msg, bot_msg, response_text, 1700) # 如果回應文字太長就拆成兩段
                         return
 
@@ -225,7 +225,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
             reply_text = f'「{msg.author.name}」 : "{word}"'
 
             await update_message_history(msg.channel.id, reply_text)
-            reply_text = await call_api(get_message_history(msg.channel.id))
+            reply_text = await text_api(get_message_history(msg.channel.id))
             await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none())
 
             print(reply_text)
@@ -247,7 +247,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     dc_msg = format_discord_message(msg.content) # 將訊息內容放入 format_discord_message, 簡單來說就是更改訊息的格式, 然後把回傳結果放入 dc_msg 變數
     dc_msg = f'{msg.author.name}: ' + dc_msg
     update_message_history(msg.channel.id, dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
-    reply_text = await call_api(get_message_history(msg.channel.id) if msg.channel.id in log else msg.content)
+    reply_text = await text_api(get_message_history(msg.channel.id) if msg.channel.id in log else msg.content)
 
     if any(detect in ['@everyone', '@here'] for detect in reply_text): # 如果返回的訊息中有 @everyone 或 @here
         reply_text = '我不能使用這個指令！' # 就返回這段 (這兩行可以選擇刪除)

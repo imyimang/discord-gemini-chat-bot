@@ -5,3 +5,6 @@
 
 - 2024/6/8
     - Streamline the code to allow the reset command to be used in DM channels
+
+- 2024/6/8
+    - Modified the file and function names to make them more intuitive to use
