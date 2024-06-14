@@ -66,4 +66,4 @@ async def image_api(image_data, text: str) -> str:
 
     if response._error:return '無法分析這張圖'
 
-    return response.text # 返回生成的內容
+    return response.text

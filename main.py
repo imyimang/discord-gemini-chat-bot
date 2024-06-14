@@ -3,7 +3,6 @@
 
 import discord
 from discord.ext import commands, tasks
-
 import re, json, aiohttp
 from itertools import cycle
 from call_api import text_api, image_api
@@ -248,9 +247,6 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     dc_msg = f'{msg.author.name}: ' + dc_msg
     update_message_history(msg.channel.id, dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
     reply_text = await text_api(get_message_history(msg.channel.id) if msg.channel.id in log else msg.content)
-
-    if any(detect in ['@everyone', '@here'] for detect in reply_text): # 如果返回的訊息中有 @everyone 或 @here
-        reply_text = '我不能使用這個指令！' # 就返回這段 (這兩行可以選擇刪除)
 
     await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
     reply_text = f'你回應{msg.author.name}:' + reply_text
