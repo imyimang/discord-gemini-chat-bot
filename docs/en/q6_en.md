@@ -4,7 +4,7 @@ Gemini released free versions 1.0 and 1.5, both of which are free to use. The re
 
 If you're using the free version, it's recommended to use 1.0. Although 1.5 has optimized models, its rate limits are quite strict.
 
-To change the model, simply go to call_api.py
+To change the model, simply go to `call_api.py`
 ```py
 ...
 

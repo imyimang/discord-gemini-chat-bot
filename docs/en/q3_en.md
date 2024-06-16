@@ -17,7 +17,7 @@ Choose "Python"
 This segment is your prompt.
 ![圖9](../images/8.png)
 
-5.Go back to call_api.py
+5.Go back to `call_api.py`
 
 ![圖11](../images/9.png)
 
