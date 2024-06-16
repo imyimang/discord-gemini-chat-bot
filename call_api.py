@@ -44,7 +44,7 @@ async def text_api(msg: str) -> str | None:
     呼叫 api 並回傳他的回應
     '''
     convo = model.start_chat(history=[
-        # 這裡放你的 prompt
+        # 這裡放你的 prompt / put your prompt here
     ])
 
     if not msg:return '這段訊息是空的'
