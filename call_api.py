@@ -50,9 +50,8 @@ async def text_api(msg: str) -> str | None:
     if not msg:return '這段訊息是空的'
 
     await convo.send_message_async(msg) # 傳送 msg 內容給 Gemini api
-    reply_text = convo.last.text
-    print(f': {reply_text}') # print 出 api 的回應 (可省略)
-    return reply_text # 將 api 的回應返還給主程式
+    print(":",convo.last.text) # print 出 api 的回應 (可省略)
+    return convo.last.text # 將 api 的回應返還給主程式
 
 async def image_api(image_data, text: str) -> str:
     '''
