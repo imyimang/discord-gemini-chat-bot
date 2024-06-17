@@ -10,10 +10,9 @@ def gettitle(website_url: str) -> str | None:
 
         soup = BeautifulSoup(response.text, 'html.parser') # 使用 BeautifulSoup 解析 HTML
 
-        title = soup.title.string # 獲取 <title> 標籤的內容
-
-        print(f'The title of the website is: {title}') # 印出 title
-        return title
+        print(f'The title of the website is: {soup.title.string}') # 印出 title
+        return soup.title.string
+    
     except Exception:
         return None
 
