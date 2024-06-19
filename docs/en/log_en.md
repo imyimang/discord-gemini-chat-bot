@@ -11,3 +11,4 @@
 
 - 2024/6/19
     - The issues regarding the inability to detect command messages and inability to use have been fixed
+    - Integrating image recognition results into short-term memory

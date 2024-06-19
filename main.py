@@ -220,6 +220,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
                         dc_msg = format_discord_message(msg.content) # 格式化訊息
                         response_text = await image_api(image_data, dc_msg) # 用 image_api 函式來發送圖片數據跟文字給 api
                         await split_and_edit_message(msg, bot_msg, response_text, 1700) # 如果回應文字太長就拆成兩段
+                        await update_message_history(msg.channel.id,f"{msg.author.name}傳送了一張圖片，內容是'{response_text}'")
                         return
 
         # 通過爬蟲來獲取網址網站標題, 進行簡單的連結判讀
