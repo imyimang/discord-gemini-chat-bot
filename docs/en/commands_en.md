@@ -17,5 +17,4 @@
 - This bot won't reply message if message author is a bot.
 - **Short-term memory for each channel is separate**, the reset command only clears the short-term memory of the specified channel.
 - The maximum sentence limit of short-term memory includes responses from the bot.
-- Short-term memory only includes text responses, not image recognition responses.
 - If the mode specified in config.json is not "blacklist" or "whitelist", it will cause the bot to be unable to use commands.
