@@ -116,7 +116,6 @@ if mode == 'whitelist':
             save_data(data, "channel")
 
         await ctx.reply('頻道已成功開啟 AI 聊天。', mention_author=False)
-        return
 
     @bot.command()
     @commands.guild_only()
@@ -135,7 +134,6 @@ if mode == 'whitelist':
             save_data(data, "channel")
 
         await ctx.reply('頻道已成功關閉 AI 聊天。', mention_author=False)
-        return
 
 elif mode == "blacklist":
     @bot.command()
@@ -155,8 +153,7 @@ elif mode == "blacklist":
             save_data(data, "channel")
 
         await ctx.reply('頻道已成功屏蔽。', mention_author=False)
-        return
-
+    
     @bot.command()
     @commands.guild_only()
     async def unblockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel = None):
@@ -174,7 +171,6 @@ elif mode == "blacklist":
             save_data(data, "channel")
 
         await ctx.reply('頻道已成功解除屏蔽。', mention_author=False)
-        return
 
 @bot.command()
 async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
@@ -188,7 +184,6 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
         await ctx.reply(f'{channel.mention} 的短期記憶已清空。', mention_author=False)
     else:
         await ctx.reply('並無儲存的短期記憶。', mention_author=False)
-    return
 
 @bot.listen('on_message')
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
