@@ -17,7 +17,7 @@ def update_message_history(channel_id: int, text: str) -> None:
     if channel_id not in log: log[channel_id] = [] # 如果 channle_id 不在在字典裡面則創建
     log[channel_id].append(text) # 把 text 加入以 channle_id 命名的鍵中
 
-    if len(log[channel_id]) > int(data['memory_max']): # 如果 channle_id 裡面存的資料大於 config 中的記憶上限
+    if len(log[channel_id]) > int(config_data['memory_max']): # 如果 channle_id 裡面存的資料大於 config 中的記憶上限
         log[channel_id].pop(0) # 就 pop 最早的一筆資料
 
 def format_discord_message(input_string: str) -> str:
@@ -48,7 +48,7 @@ async def split_and_edit_message(msg: discord.Message, bot_msg: discord.Message,
         await bot_msg.edit(content=string)
         print(f'已分析完畢 {msg.author.name} 的圖片。')
 
-def load_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
+def load_channel_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
     '''
     讀取並回傳資料
     '''
@@ -57,35 +57,35 @@ def load_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
 
     if 'id' not in data:
         data['id'] = []
-        save_data(data)
+        save_data(data, "channel")
 
     channel_list: list = data['id'] # 定義 channel_list 為 json 裡面鍵值為 'id' 的資料
 
-    return str(channel.id), channel_list
+    return str(channel.id), channel_list, data
 
-def save_data(data: dict):
+def save_data(data: dict,data_file: str):
     '''
     儲存檔案
     '''
-    with open('channel.json', 'w', encoding='utf-8') as file:
+    with open(f'{data_file}.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 # ==================================================
 
 log: dict[int, list[str]] = {} # 創建一個名稱叫 log 的字典, 用來存放短期記憶
-data: dict = json.load(open('config.json', encoding='utf-8')) # 讀取 config 的資料
+config_data: dict = json.load(open('config.json', encoding='utf-8')) # 讀取 config 的資料
 
-mode = data.get('mode', '')
+mode = config_data.get('mode', '')
 
 while True:
     if mode in ['whitelist', 'blacklist']: break
 
     mode = input('不明的模式，模式應為 "whitelist" 或 "blacklist"\n輸入執行模式: ')
 
-data['mode'] = mode
-save_data(data)
+config_data['mode'] = mode
+save_data(config_data, "config")
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or(data['prefix']), intents=discord.Intents.all()) # 設定 Discord bot
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(config_data['prefix']), intents=discord.Intents.all()) # 設定 Discord bot
 
 status = cycle(['Gemini chat bot', '我是 AI 機器人', '正在聊天']) #機器人顯示的個人狀態,可自行更改
 
@@ -101,79 +101,83 @@ async def on_ready():
 if mode == 'whitelist':
     @bot.command()
     @commands.guild_only()
-    async def openchannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+    async def openchannel(ctx: commands.Context, channel: discord.abc.GuildChannel = None):
         '''
         新增白名單內頻道
         '''
         channel = channel or ctx.channel
 
-        channel_id, channel_list = load_data(channel)
+        channel_id, channel_list, data= load_channel_data(channel)
 
         if channel_id not in channel_list: # 如果頻道 id 未被記錄在 json 檔案
             channel_list.append(channel_id) # 新增 channel_id 這筆資料
 
             data['id'] = channel_list
-            save_data(data)
+            save_data(data, "channel")
 
         await ctx.reply('頻道已成功開啟 AI 聊天。', mention_author=False)
+        return
 
     @bot.command()
     @commands.guild_only()
-    async def closechannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+    async def closechannel(ctx: commands.Context, channel: discord.abc.GuildChannel = None):
         '''
         移除白名單內頻道
         '''
         channel = channel or ctx.channel
 
-        channel_id, channel_list = load_data(channel)
+        channel_id, channel_list, data = load_channel_data(channel)
 
         if channel_id in channel_list: # 如果頻道 id 已被記錄在 json 檔案
             channel_list.remove(channel_id) # 移除 channel_id 這筆資料
 
             data['id'] = channel_list
-            save_data(data)
+            save_data(data, "channel")
 
         await ctx.reply('頻道已成功關閉 AI 聊天。', mention_author=False)
+        return
 
 elif mode == "blacklist":
     @bot.command()
     @commands.guild_only()
-    async def blockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+    async def blockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel = None):
         '''
         新增黑名單內頻道
         '''
         channel = channel or ctx.channel
 
-        channel_id, channel_list = load_data(channel)
+        channel_id, channel_list, data = load_channel_data(channel)
 
         if channel_id not in channel_list: # 如果頻道 id 未被記錄在 json 檔案
             channel_list.append(channel_id) # 新增 channel_id 這筆資料
 
             data['id'] = channel_list
-            save_data(data)
+            save_data(data, "channel")
 
         await ctx.reply('頻道已成功屏蔽。', mention_author=False)
+        return
 
     @bot.command()
     @commands.guild_only()
-    async def unblockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel):
+    async def unblockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel = None):
         '''
         移除黑名單內頻道
         '''
         channel = channel or ctx.channel
 
-        channel_id, channel_list = load_data(channel)
+        channel_id, channel_list, data = load_channel_data(channel)
 
         if channel_id in channel_list: # 如果頻道 id 已被記錄在 json 檔案
             channel_list.remove(channel_id) # 移除 channel_id 這筆資料
 
             data['id'] = channel_list
-            save_data(data)
+            save_data(data, "channel")
 
         await ctx.reply('頻道已成功解除屏蔽。', mention_author=False)
+        return
 
 @bot.command()
-async def reset(ctx: commands.Context, channel: discord.abc.Messageable):
+async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
     '''
     清空頻道短期記憶
     '''
@@ -184,18 +188,20 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable):
         await ctx.reply(f'{channel.mention} 的短期記憶已清空。', mention_author=False)
     else:
         await ctx.reply('並無儲存的短期記憶。', mention_author=False)
+    return
 
 @bot.listen('on_message')
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
-    command = msg.content.removeprefix(bot.command_prefix)
-    if msg.author.bot or (command in bot.commands): return # 忽略機器人
+    command_name = msg.content.removeprefix(config_data['prefix'])
+    if (command_name in [cmd.name for cmd in bot.commands]) or msg.author.bot:return
 
     can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
     if not can_send: # 如果機器人沒有發言權限
         print(f'沒有權限在此頻道 ({msg.channel.name}) 發言。')
         return # 不再執行下方程式
 
-    channel_id, channel_list = load_data(msg.channel)
+    result = load_channel_data(msg.channel)
+    channel_id, channel_list = result[0], result[1]
 
     if (mode == 'whitelist' and channel_id not in channel_list) or (mode == 'blacklist' and channel_id in channel_list): return # 判斷頻道 id 是否在 channel_list 裡面
 
@@ -252,4 +258,4 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     reply_text = f'你回應{msg.author.name}:' + reply_text
     update_message_history(msg.channel.id, reply_text) # 將 api 的回應上傳到短期記憶
 
-bot.run(data['token'])
+bot.run(config_data['token'])

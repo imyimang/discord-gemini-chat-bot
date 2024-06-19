@@ -6,5 +6,8 @@
 - 2024/6/8
     - Streamline the code to allow the reset command to be used in DM channels
 
-- 2024/6/8
+- 2024/6/14
     - Modified the file and function names to make them more intuitive to use
+
+- 2024/6/19
+    - The issues regarding the inability to detect command messages and inability to use have been fixed
