@@ -19,7 +19,7 @@
 ```
 pip install -U -r requirements.txt
 ```
-將 prompt 放入 `config.json` (可略過)
+將 prompt 放入 `call_api.py` (可略過) [教學](docs/zh/q7.md)
 
 將 history 放入 `call_api.py` (可略過) [教學](docs/zh/q3.md)
 

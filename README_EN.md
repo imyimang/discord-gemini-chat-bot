@@ -19,7 +19,7 @@ Fill in the required bot settings in `config.json`.
 ```
 pip install -U -r requirements.txt
 ```
-Put prompt in `config.json` (Skippable)
+Put prompt in `call_api.json` (Skippable) [Tutorial](docs/en/q7_en.md)
 
 Put history in `call_api.py` (Skippable) [Tutorial](docs/en/q3_en.md)
 

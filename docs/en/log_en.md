@@ -12,3 +12,6 @@
 - 2024/6/19
     - The issues regarding the inability to detect command messages and inability to use have been fixed
     - Integrating image recognition results into short-term memory
+
+- 2024/6/20
+    - Modified the structure of the prompt, splitting it into two parts: 'history' and 'prompt'

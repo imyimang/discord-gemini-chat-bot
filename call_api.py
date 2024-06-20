@@ -37,6 +37,10 @@ model = genai.GenerativeModel(model_name='gemini-1.0-pro', generation_config=gen
 
 image_model = genai.GenerativeModel(model_name='gemini-pro-vision', generation_config=generation_config, safety_settings=safety_settings) # 定義另外一個 model 用來生成圖片回應 (兩者不能相容)
 
+prompt = """
+
+"""
+
 #==============================================================
 
 async def text_api(msg: str) -> str | None:

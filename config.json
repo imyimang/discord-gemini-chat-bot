@@ -3,6 +3,5 @@
     "api_key": "你的 Gemini api key",
     "prefix": "你的機器人前綴",
     "memory_max": "你的記憶上限 (數字)",
-    "mode": "blacklist",
-    "prompt": ""
+    "mode": "blacklist"
 }
