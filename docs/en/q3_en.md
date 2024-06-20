@@ -1,4 +1,4 @@
-## How to generate prompts for training
+## How to generate history for training
 1. Visit the Gemini website. [**click me**](<https://makersuite.google.com/>)
 
 2. Click "Create new"，then choose "Chat prompt"

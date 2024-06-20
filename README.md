@@ -39,7 +39,9 @@ pip install -U -r requirements.txt
 
 ### [如何取得 Gemini api key?](docs/zh/q2.md)
 
-### [如何產生訓練用 history?](docs/zh/q3.md)
+### [如何撰寫Prompt提示詞?](docs/zh/q7.md)
+
+### [如何產生訓練用的history?](docs/zh/q3.md)
 
 ### [Error:The caller does not have permisson](docs/zh/q4.md)
 
