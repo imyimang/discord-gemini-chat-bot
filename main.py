@@ -226,7 +226,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
             reply_text = f'「{msg.author.name}」 : "{word}"'
 
             await update_message_history(msg.channel.id, reply_text)
-            reply_text = await text_api(get_message_history(msg.channel.id))
+            reply_text = await text_api(config_data["prompt"] + get_message_history(msg.channel.id))
             await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none())
 
             print(reply_text)
@@ -248,7 +248,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     dc_msg = format_discord_message(msg.content) # 將訊息內容放入 format_discord_message, 簡單來說就是更改訊息的格式, 然後把回傳結果放入 dc_msg 變數
     dc_msg = f'{msg.author.name}: ' + dc_msg
     update_message_history(msg.channel.id, dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
-    reply_text = await text_api(get_message_history(msg.channel.id) if msg.channel.id in log else msg.content)
+    reply_text = await text_api(config_data["prompt"] + (get_message_history(msg.channel.id) if msg.channel.id in log else msg.content))
 
     await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
     reply_text = f'你回應{msg.author.name}:' + reply_text

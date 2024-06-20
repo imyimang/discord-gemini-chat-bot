@@ -8,20 +8,20 @@
 ![圖6](../images/6.png)
 You can directly click "Save" without naming if you prefer.
 
-4.Export your prompt.
+4.Export your history.
 Click "Get code" to export
 ![圖7](../images/7.png)
 
 Choose "Python" 
 
-This segment is your prompt.
+This segment is your history.
 ![圖9](../images/8.png)
 
 5.Go back to `call_api.py`
 
 ![圖11](../images/9.png)
 
-You just need to replace the highlighted segment with your own prompt.
+You just need to replace the highlighted segment with your own history.
 
 ![圖12](../images/10.png)
 
@@ -30,4 +30,4 @@ You just need to replace the highlighted segment with your own prompt.
 
 You can also directly use conversation transcripts and place the entity you want to simulate under "Model" and yourself under "User".
 
-Simply copy the format of the prompt and change the content inside.
+Simply copy the format of the history and change the content inside.

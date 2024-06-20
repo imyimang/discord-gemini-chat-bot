@@ -19,7 +19,9 @@ Fill in the required bot settings in `config.json`.
 ```
 pip install -U -r requirements.txt
 ```
-Put prompt in `call_api.py` (Skippable) [Tutorial](docs/en/q3_en.md)
+Put prompt in `config.json` (Skippable)
+
+Put history in `call_api.py` (Skippable) [Tutorial](docs/en/q3_en.md)
 
 Run `main.py`
 
@@ -37,7 +39,7 @@ Run `main.py`
 
 ### [How to get Gemini api key](docs/en/q2_en.md)
 
-### [How to generate prompts for training](docs/en/q3_en.md)
+### [How to generate history for training](docs/en/q3_en.md)
 
 ### [Error:The caller does not have permisson](docs/en/q4_en.md)
 

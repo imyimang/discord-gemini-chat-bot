@@ -19,7 +19,9 @@
 ```
 pip install -U -r requirements.txt
 ```
-將 prompt 放入 `call_api.py` (可略過) [教學](docs/zh/q3.md)
+將 prompt 放入 `config.json` (可略過)
+
+將 history 放入 `call_api.py` (可略過) [教學](docs/zh/q3.md)
 
 執行 `main.py`
 
@@ -37,7 +39,7 @@ pip install -U -r requirements.txt
 
 ### [如何取得 Gemini api key?](docs/zh/q2.md)
 
-### [如何產生訓練用 prompt?](docs/zh/q3.md)
+### [如何產生訓練用 history?](docs/zh/q3.md)
 
 ### [Error:The caller does not have permisson](docs/zh/q4.md)
 
