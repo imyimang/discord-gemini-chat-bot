@@ -8,7 +8,6 @@ from spider import islink, gettitle
 
 #Funtions
 # ==================================================
-
 def update_message_history(channel_id: int, text: str) -> None:
     '''
     更新短期記憶
@@ -68,7 +67,6 @@ def save_data(data: dict,data_file: str):
     '''
     with open(f'{data_file}.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
-
 # ==================================================
 
 log: dict[int, list[str]] = {} # 創建一個名稱叫 log 的字典, 用來存放短期記憶
