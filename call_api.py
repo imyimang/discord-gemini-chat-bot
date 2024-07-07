@@ -5,7 +5,7 @@ import json
 data = json.load(open('config.json', encoding='utf-8'))
 genai.configure(api_key=data['api_key'])
 
-# 模型設定, 詳細設定請去 Google
+# 模型設定, 詳細設定請去Gemini官方文件研究
 generation_config = {
     'temperature': 1,
     'top_p': 1,

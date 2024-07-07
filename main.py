@@ -1,13 +1,12 @@
-# 如果你想要看懂整個程式
-# 建議去科普一下 json 檔, Python 字典, Python 函式的運作原理
-
+# 導入函式庫
 import discord
 from discord.ext import commands, tasks
 import re, json, aiohttp
 from itertools import cycle
 from call_api import prompt, text_api, image_api
-from spider import islink, gettitle # 從 call_api.py 和 spider.py 中導入函式
+from spider import islink, gettitle 
 
+#Funtions
 # ==================================================
 
 def update_message_history(channel_id: int, text: str) -> None:
