@@ -6,7 +6,7 @@ from itertools import cycle
 from call_api import prompt, text_api, image_api
 from spider import islink, gettitle 
 
-#Funtions
+# Funtions
 # ==================================================
 def update_message_history(channel_id: int, text: str) -> None:
     '''
@@ -95,6 +95,8 @@ async def on_ready():
     print(f'{bot.user} 已上線，正在執行 {"白名單" if mode == "whitelist" else "黑名單"} 模式！')
     change_status.start() # 讓機器人顯示狀態
 
+# Commands
+# ==================================================
 if mode == 'whitelist':
     @bot.command()
     @commands.guild_only()
@@ -181,6 +183,7 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
         await ctx.reply(f'{channel.mention} 的短期記憶已清空。', mention_author=False)
     else:
         await ctx.reply('並無儲存的短期記憶。', mention_author=False)
+# ==================================================        
 
 @bot.listen('on_message')
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
