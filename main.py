@@ -188,7 +188,7 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
 @bot.listen('on_message')
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
     command_name = msg.content.removeprefix(config_data['prefix'])
-    if (command_name in [cmd.name for cmd in bot.commands]) or msg.author.bot:return
+    if (command_name in [cmd.name for cmd in bot.commands]) or msg.author.bot: return
 
     can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
     if not can_send: # 如果機器人沒有發言權限
@@ -223,14 +223,10 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
         if links: # 如果訊息內容有連結
             title = gettitle('\n'.join(links)) # 取得連結中的 title
             word = msg.content.replace(links, f'(一個網址, 網址標題是: "{title}")' if title else '(一個網址, 網址無法辨識)')
-            reply_text = f'「{msg.author.name}」 : "{word}"'
-
-            await update_message_history(msg.channel.id, reply_text)
+            await update_message_history(msg.channel.id, f'「{msg.author.name}」 : "{word}"')
             reply_text = await text_api(prompt + get_message_history(msg.channel.id))
             await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none())
-
-            print(reply_text)
-            print(log[msg.channel.id])
+            print(msg.author.name + ":" + msg.content + "\n" + reply_text)
             return
 
     # 就是 print 出來訊息的詳細資料, 可以不用加
@@ -246,12 +242,10 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     # ==========================================
 
     dc_msg = format_discord_message(msg.content) # 將訊息內容放入 format_discord_message, 簡單來說就是更改訊息的格式, 然後把回傳結果放入 dc_msg 變數
-    dc_msg = f'{msg.author.name}: ' + dc_msg
-    update_message_history(msg.channel.id, dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
-    reply_text = await text_api(prompt + (get_message_history(msg.channel.id) if msg.channel.id in log else msg.content))
+    update_message_history(msg.channel.id, f'{msg.author.name}: ' + dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
+    reply_text = await text_api(prompt + (get_message_history(msg.channel.id) if (msg.channel.id) in log else msg.content))
 
     await msg.reply(reply_text, mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
-    reply_text = f'你回應{msg.author.name}:' + reply_text
-    update_message_history(msg.channel.id, reply_text) # 將 api 的回應上傳到短期記憶
+    update_message_history(msg.channel.id, f'你回應{msg.author.name}:' + reply_text) # 將 api 的回應上傳到短期記憶
 
 bot.run(config_data['token'])

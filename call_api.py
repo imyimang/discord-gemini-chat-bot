@@ -51,7 +51,7 @@ async def text_api(msg: str) -> str | None:
         # 這裡放你的 history / put your history here
     ])
 
-    if not msg:return '這段訊息是空的'
+    if not msg: return '這段訊息是空的'
 
     await convo.send_message_async(msg) # 傳送 msg 內容給 Gemini api
     print(":",convo.last.text) # print 出 api 的回應 (可省略)
@@ -67,6 +67,6 @@ async def image_api(image_data, text: str) -> str:
     prompt_parts = [image_parts[0], f'\n{text if text else "這張圖片代表什麼? 給我更多細節"}']
     response = image_model.generate_content(prompt_parts)
 
-    if response._error:return '無法分析這張圖'
+    if response._error: return '無法分析這張圖'
 
     return response.text
