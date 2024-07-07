@@ -193,7 +193,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
     if not can_send: # 如果機器人沒有發言權限
         print(f'沒有權限在此頻道 ({msg.channel.name}) 發言。')
-        return # 不再執行下方程式
+        return 
 
     result = load_channel_data(msg.channel)
     channel_id, channel_list = result[0], result[1]
