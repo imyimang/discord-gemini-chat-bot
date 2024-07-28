@@ -15,3 +15,6 @@
 
 - 2024/6/20
     - 修改了prompt的架構，把它分成history和prompt兩部分
+
+- 2024/7/28
+    - 因為Google AI不再支援Gemini 1.0 Pro Vision，所以將圖像辨識模型改成Gemini 1.5 Flash

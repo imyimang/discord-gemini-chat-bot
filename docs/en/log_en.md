@@ -15,3 +15,6 @@
 
 - 2024/6/20
     - Modified the structure of the prompt, splitting it into two parts: 'history' and 'prompt'
+
+- 2024/7/28
+    - Because Google AI no longer supports Gemini Pro Vision, the image recognition model has been changed to Gemini 1.5 Flash
