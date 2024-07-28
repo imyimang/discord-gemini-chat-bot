@@ -39,7 +39,7 @@ Run `main.py`
 
 ### [How to get Gemini api key](docs/en/q2_en.md)
 
-### [How to write prompt](docs/en/q7.md)
+### [How to write prompt](docs/en/q7_en.md)
 
 ### [How to generate history for training](docs/en/q3_en.md)
 
