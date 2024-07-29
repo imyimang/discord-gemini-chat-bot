@@ -26,31 +26,31 @@ pip install -U -r requirements.txt
 執行 `main.py`
 
 # 介紹
-### [運作原理](docs/zh/principles.md)
+- ### [運作原理](docs/zh/principles.md)
 
-### [指令](docs/zh/commands.md)
+- ### [指令](docs/zh/commands.md)
 
-### [檔案說明](docs/zh/files.md)
+- ### [檔案說明](docs/zh/files.md)
 
-### [更新日誌](docs/zh/log.md)
+- ### [更新日誌](docs/zh/log.md)
 
 # 常見問題
-### [我想要把 channel.json 改成頻道白名單而不是黑名單怎麼辦?](docs/zh/q1.md)
+- ### [我想要把 channel.json 改成頻道白名單而不是黑名單怎麼辦?](docs/zh/q1.md)
 
-### [如何取得 Gemini api key?](docs/zh/q2.md)
+- ### [如何取得 Gemini api key?](docs/zh/q2.md)
 
-### [如何撰寫Prompt提示詞?](docs/zh/q7.md)
+- ### [如何撰寫Prompt提示詞?](docs/zh/q7.md)
 
-### [如何產生訓練用的history?](docs/zh/q3.md)
+- ### [如何產生訓練用的history?](docs/zh/q3.md)
 
-### [Error:The caller does not have permisson](docs/zh/q4.md)
+- ### [Error:The caller does not have permisson](docs/zh/q4.md)
 
-### [Error:No such file or directory: 'config.json/channel.json'](docs/zh/q5.md)
+- ### [Error:No such file or directory: 'config.json/channel.json'](docs/zh/q5.md)
 
-### [Gemini 不同模型的選擇](docs/zh/q6.md)
+- ### [Gemini 不同模型的選擇](docs/zh/q6.md)
 
 
 # 參考資料
-### [Echoshard/Gemini_Discordbot](https://github.com/Echoshard/Gemini_Discordbot)
+- ### [Echoshard/Gemini_Discordbot](https://github.com/Echoshard/Gemini_Discordbot)
 
-### [peter995peter/discord-gemini-ai](https://github.com/peter995peter/discord-gemini-ai)
+- ### [peter995peter/discord-gemini-ai](https://github.com/peter995peter/discord-gemini-ai)

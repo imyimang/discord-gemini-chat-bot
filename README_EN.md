@@ -26,31 +26,31 @@ Put history in `call_api.py` (Skippable) [Tutorial](docs/en/q3_en.md)
 Run `main.py`
 
 # Project introduction
-### [Operating principle](docs/en/principles_en.md)
+- ### [Operating principle](docs/en/principles_en.md)
 
-### [commands](docs/en/commands_en.md)
+- ### [commands](docs/en/commands_en.md)
 
-### [File introduction](docs/en/files_en.md)
+- ### [File introduction](docs/en/files_en.md)
 
-### [Development log](docs/en/log_en.md)
+- ### [Development log](docs/en/log_en.md)
 
 # FAQ
-### [How to change mode from blacklist to whitelist](docs/en/q1_en.md)
+- ### [How to change mode from blacklist to whitelist](docs/en/q1_en.md)
 
-### [How to get Gemini api key](docs/en/q2_en.md)
+- ### [How to get Gemini api key](docs/en/q2_en.md)
 
-### [How to write prompt](docs/en/q7_en.md)
+- ### [How to write prompt](docs/en/q7_en.md)
 
-### [How to generate history for training](docs/en/q3_en.md)
+- ### [How to generate history for training](docs/en/q3_en.md)
 
-### [Error:The caller does not have permisson](docs/en/q4_en.md)
+- ### [Error:The caller does not have permisson](docs/en/q4_en.md)
 
-### [Error:No such file or directory: 'config.json/channel.json'](docs/en/q5_en.md)
+- ### [Error:No such file or directory: 'config.json/channel.json'](docs/en/q5_en.md)
 
-### [Choosing between different models in Gemini](docs/en/q6_en.md)
+- ### [Choosing between different models in Gemini](docs/en/q6_en.md)
 
 
 # Reference
-### [Echoshard/Gemini_Discordbot](https://github.com/Echoshard/Gemini_Discordbot)
+- ### [Echoshard/Gemini_Discordbot](https://github.com/Echoshard/Gemini_Discordbot)
 
-### [peter995peter/discord-gemini-ai](https://github.com/peter995peter/discord-gemini-ai)
+- ### [peter995peter/discord-gemini-ai](https://github.com/peter995peter/discord-gemini-ai)
