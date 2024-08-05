@@ -189,11 +189,11 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
     command_name = msg.content.removeprefix(config_data['prefix'])
     if (command_name in [cmd.name for cmd in bot.commands]) or msg.author.bot: return
-
-    can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
-    if not can_send: # 如果機器人沒有發言權限
-        print(f'沒有權限在此頻道 ({msg.channel.name}) 發言。')
-        return 
+    if not isinstance(msg.channel, discord.DMChannel):
+        can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
+        if not can_send: # 如果機器人沒有發言權限
+            print(f'沒有權限在此頻道 ({msg.channel.name}) 發言。')
+            return 
 
     result = load_channel_data(msg.channel)
     channel_id, channel_list = result[0], result[1]
