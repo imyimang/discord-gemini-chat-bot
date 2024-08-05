@@ -18,3 +18,6 @@
 
 - 2024/7/28
     - 因為Google AI不再支援Gemini 1.0 Pro Vision，所以將圖像辨識模型改成Gemini 1.5 Flash
+
+- 2024/8/5
+    - 修復了白名單模式在DM channel無法使用的問題

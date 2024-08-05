@@ -188,7 +188,7 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
 @bot.listen('on_message')
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
     command_name = msg.content.removeprefix(config_data['prefix'])
-    if (command_name in [cmd.name for cmd in bot.commands]) or msg.author.bot: return
+    if (command_name in [cmd.name for cmd in bot.commands]) or msg.author == bot.user: return
     if not isinstance(msg.channel, discord.DMChannel):
         can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
         if not can_send: # 如果機器人沒有發言權限
@@ -198,7 +198,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     result = load_channel_data(msg.channel)
     channel_id, channel_list = result[0], result[1]
 
-    if (mode == 'whitelist' and channel_id not in channel_list) or (mode == 'blacklist' and channel_id in channel_list): return # 判斷頻道 id 是否在 channel_list 裡面
+    if ((mode == 'whitelist' and channel_id not in channel_list) or (mode == 'blacklist' and channel_id in channel_list)) and not isinstance(msg.channel, discord.DMChannel): return # 判斷頻道 id 是否在 channel_list 裡面
 
     if msg.attachments: # 如果訊息中有檔案
         for attachment in msg.attachments: # 遍歷訊息中檔案

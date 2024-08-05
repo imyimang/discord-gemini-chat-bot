@@ -18,3 +18,6 @@
 
 - 2024/7/28
     - Because Google AI no longer supports Gemini Pro Vision, the image recognition model has been changed to Gemini 1.5 Flash
+
+- 2024/8/5
+    - Fixed the issue where the whitelist mode could not be used in DM channels

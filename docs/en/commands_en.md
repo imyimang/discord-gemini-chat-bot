@@ -14,7 +14,7 @@
 - All commands above are prefixed commands.
 - Command can't be used in DM channel(Except for the reset command)
 - This bot will reply **every message**,**don't need mention (@)**,so if you sent message too quick,it might get stuck.
-- This bot won't reply message if message author is a bot.
+- In whitelist mode, only the reset command can be used in DM channels; opening or closing channels is not allowed.
 - **Short-term memory for each channel is separate**, the reset command only clears the short-term memory of the specified channel.
 - The maximum sentence limit of short-term memory includes responses from the bot.
 - If the mode specified in config.json is not "blacklist" or "whitelist", it will cause the bot to be unable to use commands.
