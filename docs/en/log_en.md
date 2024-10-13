@@ -21,3 +21,6 @@
 
 - 2024/8/5
     - Fixed the issue where the whitelist mode could not be used in DM channels
+
+- 2024/10/13
+    - Fixed an issue where messages containing multiple URLs could not be processed by the web scraper
