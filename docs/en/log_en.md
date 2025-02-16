@@ -24,3 +24,6 @@
 
 - 2024/10/13
     - Fixed an issue where messages containing multiple URLs could not be processed by the web scraper
+
+- 2025/02/16
+    - Fix the issue where the web scraper is not working and add a Dockerfile

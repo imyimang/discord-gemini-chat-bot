@@ -180,7 +180,10 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
 
     if channel.id in log:
         del log[channel.id] # 清空短期記憶
-        await ctx.reply(f'{channel.mention} 的短期記憶已清空。', mention_author=False)
+        if not isinstance(ctx.channel, discord.DMChannel):
+            await ctx.reply(f'{channel.mention} 的短期記憶已清空。', mention_author=False)
+        else:
+            await ctx.reply(f'本私訊的短期記憶已清空。', mention_author=False)
     else:
         await ctx.reply('並無儲存的短期記憶。', mention_author=False)
 # ==================================================        
