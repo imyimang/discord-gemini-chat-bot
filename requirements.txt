@@ -2,3 +2,4 @@ discord
 google-generativeai
 aiohttp
 beautifulsoup4
+requests
