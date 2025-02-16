@@ -199,24 +199,24 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     channel_id, channel_list = result[0], result[1]
 
     if ((mode == 'whitelist' and channel_id not in channel_list) or (mode == 'blacklist' and channel_id in channel_list)) and not isinstance(msg.channel, discord.DMChannel): return # 判斷頻道 id 是否在 channel_list 裡面
+    async with msg.channel.typing():
+        if msg.attachments: # 如果訊息中有檔案
+            for attachment in msg.attachments: # 遍歷訊息中檔案
+                if any(attachment.filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp']): # 檢測副檔名
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(attachment.url) as resp: # 讀取圖片的 url 並將他用 aiohttp 函式庫轉換成數據
+                            if resp.status != 200:
+                                await msg.reply('圖片載入失敗。', mention_author=False) # 如果圖片分析失敗就不再執行下方程式
+                                return
 
-    if msg.attachments: # 如果訊息中有檔案
-        for attachment in msg.attachments: # 遍歷訊息中檔案
-            if any(attachment.filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp']): # 檢測副檔名
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(attachment.url) as resp: # 讀取圖片的 url 並將他用 aiohttp 函式庫轉換成數據
-                        if resp.status != 200:
-                            await msg.reply('圖片載入失敗。', mention_author=False) # 如果圖片分析失敗就不再執行下方程式
+                            print(f'正在分析 {msg.author.name} 的圖片...')
+                            bot_msg = await msg.reply('正在分析圖片...', mention_author=False)
+                            image_data = await resp.read() # 定義 image_data 為 aiohttp 回應的數據
+                            dc_msg = format_discord_message(msg.content) # 格式化訊息
+                            response_text = await image_api(image_data, dc_msg) # 用 image_api 函式來發送圖片數據跟文字給 api
+                            await split_and_edit_message(msg, bot_msg, response_text, 1700) # 如果回應文字太長就拆成兩段
+                            update_message_history(msg.channel.id,f"[{msg.author.name}]:傳送了一張圖片，內容是'{response_text}'")
                             return
-
-                        print(f'正在分析 {msg.author.name} 的圖片...')
-                        bot_msg = await msg.reply('正在分析圖片...', mention_author=False)
-                        image_data = await resp.read() # 定義 image_data 為 aiohttp 回應的數據
-                        dc_msg = format_discord_message(msg.content) # 格式化訊息
-                        response_text = await image_api(image_data, dc_msg) # 用 image_api 函式來發送圖片數據跟文字給 api
-                        await split_and_edit_message(msg, bot_msg, response_text, 1700) # 如果回應文字太長就拆成兩段
-                        update_message_history(msg.channel.id,f"[{msg.author.name}]:傳送了一張圖片，內容是'{response_text}'")
-                        return
 
         # 通過爬蟲來獲取網址網站標題, 進行簡單的連結判讀
         links = islink(msg.content)
