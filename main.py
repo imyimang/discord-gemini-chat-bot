@@ -215,7 +215,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
                         dc_msg = format_discord_message(msg.content) # 格式化訊息
                         response_text = await image_api(image_data, dc_msg) # 用 image_api 函式來發送圖片數據跟文字給 api
                         await split_and_edit_message(msg, bot_msg, response_text, 1700) # 如果回應文字太長就拆成兩段
-                        update_message_history(msg.channel.id,f"[{msg.author.name}]: 傳送了一張圖片，內容是'{response_text}'")
+                        update_message_history(msg.channel.id,f"[{msg.author.name}]:傳送了一張圖片，內容是'{response_text}'")
                         return
 
         # 通過爬蟲來獲取網址網站標題, 進行簡單的連結判讀
@@ -225,7 +225,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
             for link in links:
                 title = gettitle(link) # 取得連結中的 title
                 word += msg.content.replace(link, f'(一個網址, 網址標題是: "{title}")\n' if title else '(一個網址, 網址無法辨識)\n')
-            update_message_history(msg.channel.id, f'[{msg.author.name}]: {word}')
+            update_message_history(msg.channel.id, f'[{msg.author.name}]:{word}')
             reply_text = await text_api(prompt + get_message_history(msg.channel.id))
             await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none())
             print(msg.author.name + ":" + msg.content + "\n" + reply_text)
@@ -248,6 +248,6 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     reply_text = await text_api(prompt + (get_message_history(msg.channel.id) if (msg.channel.id) in log else msg.content))
 
     await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
-    update_message_history(msg.channel.id, f'[model]: ' + reply_text) # 將 api 的回應上傳到短期記憶
+    update_message_history(msg.channel.id, f'[model]:' + reply_text) # 將 api 的回應上傳到短期記憶
 
 bot.run(config_data['token'])
