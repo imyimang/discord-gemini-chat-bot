@@ -27,3 +27,6 @@ model_name='gemini-1.5-pro'
 You can make changes according to the model you want.
 > [!WARNING]  
 > Starting from July 12, 2024, Google AI will no longer support Gemini 1.0 Pro Vision api. Please use Gemini 1.5 Flash or other models.
+
+> [!WARNING]  
+> Starting from February 18, 2025, Google AI will no longer support Gemini 1.0 Pro API. Please use Gemini 1.5 Flash/Pro or other models.
