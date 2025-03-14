@@ -27,3 +27,6 @@
 
 - 2025/02/16
     - Fix the issue where the web scraper is not working and add a Dockerfile
+
+- 2025/03/15
+    - Since the Google Gemini API no longer supports the gemini-1.0-pro model, the image recognition model has been switched to gemini-1.5-pro

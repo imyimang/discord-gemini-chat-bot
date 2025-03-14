@@ -27,3 +27,6 @@
 
 - 2025/02/16
     - 修復爬蟲無法使用，新增Dockerfile
+
+- 2025/03/15
+    - 由於Google Gemini API不再支援 gemini-1.0-pro 模型，圖片辨識的模型改為用 gemini-1.5-pro
