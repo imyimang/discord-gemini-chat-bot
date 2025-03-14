@@ -2,7 +2,7 @@
 
 ## English | [繁體中文](README.md) 
 
-This is a  Discord chat bot that using an API from Google's Gemini model.
+This is a Discord AI chat bot that using an API from Google's Gemini model.
 
 * It has two modes: whitelist and blacklist.(See the **FAQ** for more details)
 
