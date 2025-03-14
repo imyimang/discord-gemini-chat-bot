@@ -2,7 +2,7 @@
 
 ## [English](README_EN.md) | 繁體中文 
 
-這是一個利用 Google 開發的 Gemini 模型的 api 來連接 Discord 機器人的 Chat bot
+這是一個利用 Google 開發的 Gemini 模型的 API 來製作的 Discord AI 聊天機器人
 
 * 頻道具有黑白名單兩種模式(請見**常見問題**)
 
