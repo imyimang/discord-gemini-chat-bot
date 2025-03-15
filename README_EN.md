@@ -4,13 +4,11 @@
 
 This is a Discord AI chatbot created using the Google Gemini model's API.
 
-* Channels have two modes: blacklist and whitelist (please see [**FAQ**](#faq)).
-
-* Text chat has a short-term memory function (memory sentence limit is customizable).
+* Have a short-term memory function (memory sentence limit is customizable).
 
 * It can perform image recognition.
 
-* It can be used in DM channels.
+* It can be used in DM.
 
 * It can understand the content of URLs through web crawling.
 
@@ -30,7 +28,6 @@ Run `main.py`
 ## Introduction
 - [How it works](docs/en/principles_en.md)
 - [Commands](docs/en/commands_en.md)
-- [File description](docs/en/files_en.md)
 - [Changelog](docs/en/log_en.md)
 
 ## FAQ

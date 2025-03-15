@@ -4,13 +4,11 @@
 
 這是一個利用 Google Gemini 模型的 API 來製作的 Discord AI 聊天機器人
 
-* 頻道具有黑白名單兩種模式(請見[**常見問題**](#常見問題))
-
-* 文字聊天具有短期記憶功能(記憶句數上限可自訂)
+* 具有短期記憶功能(記憶句數上限可自訂)
 
 * 能夠進行圖片辨識
 
-* 能在DM channel中使用
+* 能在 DM 中使用
 
 * 能通過爬蟲簡單理解網址內容
 
@@ -30,12 +28,11 @@ pip install -U -r requirements.txt
 ## 介紹
 - [運作原理](docs/zh/principles.md)
 - [指令](docs/zh/commands.md)
-- [檔案說明](docs/zh/files.md)
 - [更新日誌](docs/zh/log.md)
 
 ## 常見問題
-- [如何取得 Gemini api key?](docs/zh/q2.md)
-- [如何撰寫Prompt提示詞?](docs/zh/q7.md)
+- [如何取得 Gemini API key?](docs/zh/q2.md)
+- [如何撰寫提示詞?](docs/zh/q7.md)
 - [如何產生訓練用的history?](docs/zh/q3.md)
 - [Error:The caller does not have permisson](docs/zh/q4.md)
 - [Error:No such file or directory: 'config.json/channel.json'](docs/zh/q5.md)
