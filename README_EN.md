@@ -1,6 +1,6 @@
 # Gemini Discord Bot
 [![Python](https://img.shields.io/badge/python-%3E%3D%203.12-blue)](https://www.python.org/)
-[![discord.py](https://img.shields.io/badge/discord.py-v2.4.0-blue)](https://github.com/Rapptz/discord.py)
+[![discord.py](https://img.shields.io/badge/discord.py-%3E%3D%202.4.0-blue)](https://github.com/Rapptz/discord.py)
 [![Stars](https://img.shields.io/github/stars/imyimang/discord-gemini-chat-bot)](https://github.com/imyimang/discord-gemini-chat-bot/stargazers)
 [![Forks](https://img.shields.io/github/forks/imyimang/discord-gemini-chat-bot)](https://github.com/imyimang/discord-gemini-chat-bot/forks)
 [![License](https://img.shields.io/github/license/imyimang/discord-gemini-chat-bot)](https://github.com/imyimang/discord-gemini-chat-bot/blob/main/LICENSE)
