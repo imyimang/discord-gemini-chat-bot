@@ -3,3 +3,4 @@ google-generativeai
 aiohttp
 beautifulsoup4
 requests
+python-dotenv

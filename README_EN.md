@@ -1,56 +1,47 @@
 # Gemini Discord Bot
 
-## English | [繁體中文](README.md) 
+## English | [繁體中文](README.md)
 
-This is a Discord AI chat bot that using an API from Google's Gemini model.
+This is a Discord AI chatbot created using the Google Gemini model's API.
 
-* It has two modes: whitelist and blacklist.(See the **FAQ** for more details)
+* Channels have two modes: blacklist and whitelist (please see [**FAQ**](#faq)).
 
-* The text chat includes short-term memory functionality, with the option to customize the maximum number of sentences it can remember.
+* Text chat has a short-term memory function (memory sentence limit is customizable).
 
-* It's capable of performing image recognition.
+* It can perform image recognition.
 
-* It can be used in DM (Direct Message) channels.
+* It can be used in DM channels.
 
-* It can understand website content through web scraping.
+* It can understand the content of URLs through web crawling.
 
-# Get Started
-Fill in the required bot settings in `config.json`.
-```
+## Deployment
+Fill in the bot settings in `.env.example`, then rename it to `.env`.
+
+Install libraries:
+```powershell
 pip install -U -r requirements.txt
 ```
-Put prompt in `call_api.json` (Skippable) [Tutorial](docs/en/q7_en.md)
+Place the prompt in `call_api.py` (optional) [Tutorial](docs/en/q7_en.md)
 
-Put history in `call_api.py` (Skippable) [Tutorial](docs/en/q3_en.md)
+Place the history in `call_api.py` (optional) [Tutorial](docs/en/q3_en.md)
 
 Run `main.py`
 
-# Project introduction
-- ### [Operating principle](docs/en/principles_en.md)
+## Introduction
+- [How it works](docs/en/principles_en.md)
+- [Commands](docs/en/commands_en.md)
+- [File description](docs/en/files_en.md)
+- [Changelog](docs/en/log_en.md)
 
-- ### [commands](docs/en/commands_en.md)
+## FAQ
+- [How can I change channel.json to a whitelist instead of a blacklist?](docs/en/q1_en.md)
+- [How to get a Gemini API key?](docs/en/q2_en.md)
+- [How to write prompts?](docs/en/q7_en.md)
+- [How to generate training history?](docs/en/q3_en.md)
+- [Error: The caller does not have permission](docs/en/q4_en.md)
+- [Error: No such file or directory: 'config.json/channel.json'](docs/en/q5_en.md)
+- [Different Gemini model options](docs/en/q6_en.md)
 
-- ### [File introduction](docs/en/files_en.md)
-
-- ### [Development log](docs/en/log_en.md)
-
-# FAQ
-- ### [How to change mode from blacklist to whitelist](docs/en/q1_en.md)
-
-- ### [How to get Gemini api key](docs/en/q2_en.md)
-
-- ### [How to write prompt](docs/en/q7_en.md)
-
-- ### [How to generate history for training](docs/en/q3_en.md)
-
-- ### [Error:The caller does not have permisson](docs/en/q4_en.md)
-
-- ### [Error:No such file or directory: 'config.json/channel.json'](docs/en/q5_en.md)
-
-- ### [Choosing between different models in Gemini](docs/en/q6_en.md)
-
-
-# Reference
-- ### [Echoshard/Gemini_Discordbot](https://github.com/Echoshard/Gemini_Discordbot)
-
-- ### [peter995peter/discord-gemini-ai](https://github.com/peter995peter/discord-gemini-ai)
+# References
+- [Echoshard/Gemini_Discordbot](https://github.com/Echoshard/Gemini_Discordbot)
+- [peter995peter/discord-gemini-ai](https://github.com/peter995peter/discord-gemini-ai)

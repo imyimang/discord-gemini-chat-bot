@@ -2,12 +2,12 @@
 
 *注意: 以下指令都沒有設定任何權限限制，任何人都能使用。*
 
-- 黑名單模式(預設)
-    - blockchannel ➡️ 新增頻道至黑名單
-    - unblockchannel ➡️ 將頻道從黑名單移除
-- 白名單模式
+- 白名單模式(預設)
     - openchannel ➡️ 新增頻道至白名單
     - closechannel ➡️ 將頻道從白名單移除
+- 黑名單模式
+    - blockchannel ➡️ 新增頻道至黑名單
+    - unblockchannel ➡️ 將頻道從黑名單移除
 - reset ➡️ 清空頻道短期記憶
 
 ## 注意事項

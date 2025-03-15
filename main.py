@@ -1,26 +1,33 @@
-# 導入函式庫
 import discord
 from discord.ext import commands, tasks
-import re, json, aiohttp
+import re, json, aiohttp, os
 from itertools import cycle
+from dotenv import load_dotenv
 from call_api import prompt, text_api, image_api
 from spider import islink, gettitle 
 
-# Funtions
+load_dotenv()
+
+TOKEN = os.getenv("DISCORD_TOKEN")
+PREFIX = os.getenv("PREFIX")
+MODE = os.getenv("MODE", "whitelist")
+MEMORY_MAX = int(os.getenv("MEMORY_MAX", 100))
+
+# Functions
 # ==================================================
 def update_message_history(channel_id: int, text: str) -> None:
     '''
     更新短期記憶
     '''
-    if channel_id not in log: log[channel_id] = [] # 如果 channle_id 不在在字典裡面則創建
+    if channel_id not in log: log[channel_id] = [] # 如果 channle_id 不在字典裡面則創建
     log[channel_id].append(text) # 把 text 加入以 channle_id 命名的鍵中
 
-    if len(log[channel_id]) > int(config_data['memory_max']): # 如果 channle_id 裡面存的資料大於 config 中的記憶上限
+    if len(log[channel_id]) > MEMORY_MAX:
         log[channel_id].pop(0) # 就 pop 最早的一筆資料
 
 def format_discord_message(input_string: str) -> str:
     '''
-    刪除並回傳 Disord 聊天訊息中位於 < 和 > 之間的文字 (讓他能夠放入短期記憶並被 AI 讀懂)
+    刪除並回傳 Discord 聊天訊息中位於 < 和 > 之間的文字 (讓他能夠放入短期記憶並被 AI 讀懂)
     '''
     bracket_pattern = re.compile(r'<[^>]+>')
     cleaned_content = bracket_pattern.sub('', input_string)
@@ -61,7 +68,7 @@ def load_channel_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
 
     return str(channel.id), channel_list, data
 
-def save_data(data: dict,data_file: str):
+def save_data(data: dict, data_file: str):
     '''
     儲存檔案
     '''
@@ -70,21 +77,15 @@ def save_data(data: dict,data_file: str):
 # ==================================================
 
 log: dict[int, list[str]] = {} # 創建一個名稱叫 log 的字典, 用來存放短期記憶
-config_data: dict = json.load(open('config.json', encoding='utf-8')) # 讀取 config 的資料
 
-mode = config_data.get('mode', '')
-
+# 檢查 MODE 是否有效
 while True:
-    if mode in ['whitelist', 'blacklist']: break
+    if MODE in ['whitelist', 'blacklist']: break
+    MODE = input('不明的模式，模式應為 "whitelist" 或 "blacklist"\n輸入執行模式: ')
 
-    mode = input('不明的模式，模式應為 "whitelist" 或 "blacklist"\n輸入執行模式: ')
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(PREFIX), intents=discord.Intents.all())
 
-config_data['mode'] = mode
-save_data(config_data, "config")
-
-bot = commands.Bot(command_prefix=commands.when_mentioned_or(config_data['prefix']), intents=discord.Intents.all()) # 設定 Discord bot
-
-status = cycle(['Gemini chat bot', '我是 AI 機器人', '正在聊天']) #機器人顯示的個人狀態,可自行更改
+status = cycle(['Gemini chat bot', '我是 AI 機器人', '正在聊天']) # 機器人顯示的個人狀態,可自行更改
 
 @tasks.loop(seconds=10) # 每隔 10 秒更換一次機器人個人狀態
 async def change_status():
@@ -92,12 +93,12 @@ async def change_status():
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user} 已上線，正在執行 {"白名單" if mode == "whitelist" else "黑名單"} 模式！')
+    print(f'{bot.user} 已上線，正在執行 {"白名單" if MODE == "whitelist" else "黑名單"} 模式！')
     change_status.start() # 讓機器人顯示狀態
 
 # Commands
 # ==================================================
-if mode == 'whitelist':
+if MODE == 'whitelist':
     @bot.command()
     @commands.guild_only()
     async def openchannel(ctx: commands.Context, channel: discord.abc.GuildChannel = None):
@@ -106,7 +107,7 @@ if mode == 'whitelist':
         '''
         channel = channel or ctx.channel
 
-        channel_id, channel_list, data= load_channel_data(channel)
+        channel_id, channel_list, data = load_channel_data(channel)
 
         if channel_id not in channel_list: # 如果頻道 id 未被記錄在 json 檔案
             channel_list.append(channel_id) # 新增 channel_id 這筆資料
@@ -134,7 +135,7 @@ if mode == 'whitelist':
 
         await ctx.reply('頻道已成功關閉 AI 聊天。', mention_author=False)
 
-elif mode == "blacklist":
+elif MODE == "blacklist":
     @bot.command()
     @commands.guild_only()
     async def blockchannel(ctx: commands.Context, channel: discord.abc.GuildChannel = None):
@@ -190,7 +191,7 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
 
 @bot.listen('on_message')
 async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
-    command_name = msg.content.removeprefix(config_data['prefix'])
+    command_name = msg.content.removeprefix(PREFIX)
     if (command_name in [cmd.name for cmd in bot.commands]) or msg.author == bot.user: return
     if not isinstance(msg.channel, discord.DMChannel):
         can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
@@ -201,7 +202,7 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     result = load_channel_data(msg.channel)
     channel_id, channel_list = result[0], result[1]
 
-    if ((mode == 'whitelist' and channel_id not in channel_list) or (mode == 'blacklist' and channel_id in channel_list)) and not isinstance(msg.channel, discord.DMChannel): return # 判斷頻道 id 是否在 channel_list 裡面
+    if ((MODE == 'whitelist' and channel_id not in channel_list) or (MODE == 'blacklist' and channel_id in channel_list)) and not isinstance(msg.channel, discord.DMChannel): return # 判斷頻道 id 是否在 channel_list 裡面
     async with msg.channel.typing():
         if msg.attachments: # 如果訊息中有檔案
             for attachment in msg.attachments: # 遍歷訊息中檔案
@@ -253,4 +254,4 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
     await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
     update_message_history(msg.channel.id, f'[model]:' + reply_text) # 將 api 的回應上傳到短期記憶
 
-bot.run(config_data['token'])
+bot.run(TOKEN)

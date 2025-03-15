@@ -2,12 +2,12 @@
 
 *Note: The following commands have no permission restrictions and can be used by anyone.*
 
-- Blacklist mode(Default)
-    - blockchannel ➡️ add channel to blacklist
-    - unblockchannel ➡️ remove channel from blacklist
-- Whitelist mode
+- Whitelist mode(Default)
     - openchannel ➡️ add channel to whitelist
     - closechannel ➡️ remove channel from whitelist
+- Blacklist mode
+    - blockchannel ➡️ add channel to blacklist
+    - unblockchannel ➡️ remove channel from blacklist
 - reset ➡️ Clearing short-term memory in the channel
 
 ## Points to note

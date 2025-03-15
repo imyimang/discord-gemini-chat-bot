@@ -1,9 +1,12 @@
 
 import google.generativeai as genai
-import json
+import os
+from dotenv import load_dotenv
 
-data = json.load(open('config.json', encoding='utf-8'))
-genai.configure(api_key=data['api_key'])
+load_dotenv()
+
+API_KEY = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=API_KEY)
 
 # 模型設定, 詳細設定請去Gemini官方文件研究
 generation_config = {
