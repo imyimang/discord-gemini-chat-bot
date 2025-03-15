@@ -34,7 +34,6 @@ Run `main.py`
 - [Changelog](docs/en/log_en.md)
 
 ## FAQ
-- [How can I change channel.json to a whitelist instead of a blacklist?](docs/en/q1_en.md)
 - [How to get a Gemini API key?](docs/en/q2_en.md)
 - [How to write prompts?](docs/en/q7_en.md)
 - [How to generate training history?](docs/en/q3_en.md)

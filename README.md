@@ -34,7 +34,6 @@ pip install -U -r requirements.txt
 - [更新日誌](docs/zh/log.md)
 
 ## 常見問題
-- [我想要把 channel.json 改成頻道白名單而不是黑名單怎麼辦?](docs/zh/q1.md)
 - [如何取得 Gemini api key?](docs/zh/q2.md)
 - [如何撰寫Prompt提示詞?](docs/zh/q7.md)
 - [如何產生訓練用的history?](docs/zh/q3.md)
