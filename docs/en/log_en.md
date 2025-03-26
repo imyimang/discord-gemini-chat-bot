@@ -30,3 +30,6 @@
 
 - 2025/03/15
     - Since the Google Gemini API no longer supports the gemini-1.0-pro model, the image recognition model has been switched to gemini-1.5-pro
+
+- 2025/03/26
+    - Change image response structure

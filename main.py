@@ -40,19 +40,6 @@ def get_message_history(channel_id: int) -> str | None:
     if channel_id in log: # 如果 channel_id 有在 log 字典裏面
         return '\n\n'.join(log[channel_id])
 
-async def split_and_edit_message(msg: discord.Message, bot_msg: discord.Message, text: str, max_length: int) -> None:
-    '''
-    拆分並編輯訊息
-    '''
-    messages = []
-    for i in range(0, len(text), max_length):
-        sub_message = text[i:i+max_length] # 如果訊息長度超過 max_length 就把他拆開
-        messages.append(sub_message)
-
-    for string in messages:
-        await bot_msg.edit(content=string)
-        print(f'已分析完畢 {msg.author.name} 的圖片。')
-
 def load_channel_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
     '''
     讀取並回傳資料
@@ -214,12 +201,13 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
                                 return
 
                             print(f'正在分析 {msg.author.name} 的圖片...')
-                            bot_msg = await msg.reply('正在分析圖片...', mention_author=False)
                             image_data = await resp.read() # 定義 image_data 為 aiohttp 回應的數據
                             dc_msg = format_discord_message(msg.content) # 格式化訊息
                             response_text = await image_api(image_data, dc_msg) # 用 image_api 函式來發送圖片數據跟文字給 api
-                            await split_and_edit_message(msg, bot_msg, response_text, 1700) # 如果回應文字太長就拆成兩段
                             update_message_history(msg.channel.id,f"[{msg.author.name}]:傳送了一張圖片，內容是'{response_text}'")
+                            reply_text = await text_api(prompt + get_message_history(msg.channel.id))
+                            await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none())
+                            print(msg.author.name + ":" + msg.content + "\n" + reply_text)
                             return
 
         # 通過爬蟲來獲取網址網站標題, 進行簡單的連結判讀
