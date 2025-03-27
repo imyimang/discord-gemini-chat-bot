@@ -60,7 +60,7 @@ async def text_api(msg: str) -> str | None:
     print(":",convo.last.text) # print 出 api 的回應 (可省略)
     return convo.last.text # 將 api 的回應返還給主程式
 
-async def image_api(image_data, text: str) -> str:
+async def image_api(image_data) -> str:
     '''
     回傳 api 對包含圖片的訊息的回應
     '''
