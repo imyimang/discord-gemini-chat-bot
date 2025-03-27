@@ -203,8 +203,8 @@ async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息�
                             print(f'正在分析 {msg.author.name} 的圖片...')
                             image_data = await resp.read() # 定義 image_data 為 aiohttp 回應的數據
                             dc_msg = format_discord_message(msg.content) # 格式化訊息
-                            response_text = await image_api(image_data, dc_msg) # 用 image_api 函式來發送圖片數據跟文字給 api
-                            update_message_history(msg.channel.id,f"[{msg.author.name}]:傳送了一張圖片，內容是'{response_text}'")
+                            response_text = await image_api(image_data) # 用 image_api 函式來發送圖片數據跟文字給 api
+                            update_message_history(msg.channel.id,f"[{msg.author.name}]:{msg.content}(附上一張圖片，內容是「{response_text}」)")
                             reply_text = await text_api(prompt + get_message_history(msg.channel.id))
                             await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none())
                             print(msg.author.name + ":" + msg.content + "\n" + reply_text)
