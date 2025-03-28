@@ -18,7 +18,10 @@ This is a Discord AI chatbot created using the Google Gemini model's API.
 * It can understand the content of URLs through web crawling.
 
 ## Demo
-![alt text](docs/images/14.jpg)
+<details>
+  <summary>Click here</summary>
+  <img src="docs/images/14.jpg" alt="Image">
+</details>
 
 ## Installation
 Fill in the bot settings in `.env.example`, then rename it to `.env`.

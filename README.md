@@ -18,7 +18,10 @@
 * 能通過爬蟲簡單理解網址內容
 
 ## Demo
-![alt text](docs/images/13.jpg)
+<details>
+  <summary>點擊展開</summary>
+  <img src="docs/images/13.jpg" alt="Image">
+</details>
 
 ## 安裝
 將機器人設定填入 `.env.example` 中，然後將它重新命名為 `.env`
