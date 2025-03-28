@@ -19,7 +19,7 @@
 
 ## Demo
 <details>
-  <summary>點擊展開</summary>
+  <summary>點擊查看</summary>
   <img src="docs/images/13.jpg" alt="Image">
 </details>
 
