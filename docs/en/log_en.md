@@ -33,3 +33,6 @@
 
 - 2025/03/26
     - Change image response structure
+
+- 2025/04/20  
+    - Added external tool invocation, supporting reading of `.txt`, `.log`, and `.md` files

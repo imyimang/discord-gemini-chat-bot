@@ -9,30 +9,36 @@
 
 This is a Discord AI chatbot created using the Google Gemini model's API.
 
-* Have a short-term memory function (memory sentence limit is customizable).
-
-* It can perform image recognition.
-
-* It can be used in DM.
-
-* It can understand the content of URLs through web crawling.
+## Features
+- Short-term memory  
+- Image recognition  
+- Simple web link title extraction and content detection  
+- Content search via WolframAlpha  
+- Content search via Google  
+- News crawling from various NOWnews sections  
+- YouTube video search  
 
 ## Demo
 <details>
-  <summary>Click here</summary>
+  <summary>Click to view</summary>
   <img src="docs/images/14.jpg" alt="Image">
 </details>
 
 ## Installation
-Fill in the bot settings in `.env.example`, then rename it to `.env`.
+Fill in the bot configuration in `.env.example`, then rename it to `.env`.
 
-Install libraries:
+> [!WARNING]  
+> External tool calling is disabled by default. To enable it, change `CALL_TOOLS = false` to `CALL_TOOLS = true`,  
+> and provide the corresponding API keys.
+
+Install dependencies:
 ```powershell
 pip install -U -r requirements.txt
 ```
-Place the prompt in `call_api.py` (optional) [Tutorial](docs/en/q7_en.md)
 
-Place the history in `call_api.py` (optional) [Tutorial](docs/en/q3_en.md)
+Put your prompt into `prompt.txt` (optional) [Tutorial](docs/zh/q7.md)
+
+Place your message history logic into `call_api.py` (optional) [Tutorial](docs/zh/q3.md)
 
 Run `main.py`
 
