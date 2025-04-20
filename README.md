@@ -9,13 +9,14 @@
 
 這是一個利用 Google Gemini 模型的 API 來製作的 Discord AI 聊天機器人
 
-* 具有短期記憶功能(記憶句數上限可自訂)
-
-* 能夠進行圖片辨識
-
-* 能在 DM 中使用
-
-* 能通過爬蟲簡單理解網址內容
+## 功能
+- 短期記憶
+- 圖片辨識
+- 爬取網址 Title 簡單判斷內容
+- 透過 Wolframalpha 搜尋內容
+- 透過 Google 搜尋內容
+- 爬取 NOWnews 各版新聞
+- 搜尋 Youtube 影片
 
 ## Demo
 <details>
@@ -26,15 +27,20 @@
 ## 安裝
 將機器人設定填入 `.env.example` 中，然後將它重新命名為 `.env`
 
+> [!WARNING]  
+> 外部工具調用預設為關閉，如果要開啟請將 `CALL_TOOLS = false` 更改為 `CALL_TOOLS = true`
+> 並填入對應的 API Key
+
 安裝函式庫:
 ```powershell
 pip install -U -r requirements.txt
 ```
-將 prompt 放入 `call_api.py` (可略過) [教學](docs/zh/q7.md)
+將 prompt 放入 `prompt.txt` (可略過) [教學](docs/zh/q7.md)
 
 將 history 放入 `call_api.py` (可略過) [教學](docs/zh/q3.md)
 
 執行 `main.py`
+
 
 ## 介紹
 - [運作原理](docs/zh/principles.md)

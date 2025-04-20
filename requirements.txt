@@ -4,3 +4,6 @@ aiohttp
 beautifulsoup4
 requests
 python-dotenv
+isodate
+google-api-python-client
+aiofiles

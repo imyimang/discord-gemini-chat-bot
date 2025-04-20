@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands, tasks
 import re, json, aiohttp, os
+import aiofiles
 from itertools import cycle
 from dotenv import load_dotenv
 from call_api import prompt, text_api, image_api
-from spider import islink, gettitle 
+from spider import islink, gettitle
+from tools import wolframalpha,get_news,youtube_search
 
 load_dotenv()
 
@@ -15,15 +17,13 @@ MEMORY_MAX = int(os.getenv("MEMORY_MAX", 100))
 
 # Functions
 # ==================================================
-def update_message_history(channel_id: int, text: str) -> None:
-    '''
-    更新短期記憶
-    '''
-    if channel_id not in log: log[channel_id] = [] # 如果 channle_id 不在字典裡面則創建
-    log[channel_id].append(text) # 把 text 加入以 channle_id 命名的鍵中
-
+def update_message_history(channel_id: int, text: str) -> str:
+    if channel_id not in log:
+        log[channel_id] = []
+    log[channel_id].append(text)
     if len(log[channel_id]) > MEMORY_MAX:
-        log[channel_id].pop(0) # 就 pop 最早的一筆資料
+        log[channel_id].pop(0)
+    return "\n".join(log[channel_id])
 
 def format_discord_message(input_string: str) -> str:
     '''
@@ -61,6 +61,95 @@ def save_data(data: dict, data_file: str):
     '''
     with open(f'{data_file}.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
+
+def extract_json_block(text):
+    """
+    從文字中尋找並解析第一個合法的 JSON 區塊（支援巢狀），
+    返回 (解析後的 JSON 物件, 起始位置, 結束位置) 或 None。
+    """
+    start = text.find("{")
+    while start != -1:
+        stack = []
+        for i in range(start, len(text)):
+            if text[i] == "{":
+                stack.append("{")
+            elif text[i] == "}":
+                if stack:
+                    stack.pop()
+                if not stack:  # 找到完整的 JSON 區塊
+                    json_str = text[start:i+1]
+                    try:
+                        parsed_json = json.loads(json_str)
+                        return parsed_json, start, i + 1
+                    except json.JSONDecodeError:
+                        break  # JSON 格式錯誤，換下一組
+        start = text.find("{", start + 1)
+    return None, -1, -1
+
+async def process_tools_in_response(channel_id: int, response: str) -> str:
+    print("原始回應：", response)
+    all_tool_outputs = []  # 儲存所有工具的執行結果
+    processed_jsons = set()  # 記錄已處理的 JSON 字符串，避免重複
+    max_iterations = 20  # 限制最大迭代次數，防止無限循環
+
+    iteration = 0
+    while iteration < max_iterations:
+        data, start, end = extract_json_block(response)
+        if not data:
+            print("未找到新的 JSON 區塊，結束提取")
+            break
+
+        # 將 JSON 轉為字符串，用於檢查是否已處理
+        json_str = json.dumps(data, sort_keys=True)
+        if json_str in processed_jsons:
+            print(f"檢測到重複的 JSON 區塊：{json_str}，跳過")
+            # 移除重複的 JSON 區塊，防止下次循環再次提取
+            response = response[:start] + response[end:]
+            iteration += 1
+            continue
+
+        tool_response = None
+        if data.get("type") == "wolframalpha" and data.get("question_original") and data.get("question_english"):
+            print(f"正在使用 wolframalpha，內容原文:{data["question_original"]}，內容英文:{data["question_english"]}")
+            tool_response = wolframalpha(data["question_english"], data["question_original"])
+
+        elif data.get("type") == "get_news" and data.get("category"):
+            print(f"正在使用 get_news，類別：{data['category']}")
+            tool_response = get_news(data["category"])
+
+        elif data.get("type") == "youtube_search" and data.get("query") and data.get("max_results") and data.get("language") and data.get("duration"):
+            print(f"正在使用 youtube_search，內容：{data['query']}")
+            tool_response = await youtube_search(data["query"], int(data["max_results"]), data["language"], data["duration"])
+
+        # 移除當前 JSON 區塊（無論是否有有效工具回應）
+        response = response[:start] + response[end:]
+        print("移除 JSON 後的回應：", response)
+
+        if tool_response:
+            print("工具結果：", tool_response)
+            all_tool_outputs.append(tool_response)
+            processed_jsons.add(json_str)  # 記錄已處理的 JSON
+        else:
+            print(f"無效工具或缺少參數，跳過 JSON：{json_str}")
+            processed_jsons.add(json_str)  # 即使無效也要記錄，避免重複處理
+
+        iteration += 1
+
+    # 如果有工具結果，則一次性送回模型處理
+    if all_tool_outputs:
+        print("所有工具結果：", all_tool_outputs)
+        # 將工具結果合併到系統提示中，並明確要求模型不要生成新的工具 JSON
+        history = update_message_history(
+            channel_id,
+            "[system]: (模型已調用外部工具，結果如下，請根據結果回應使用者的問題，並避免生成新的工具 JSON 區塊)\n" +
+            "\n".join(all_tool_outputs)
+        )
+        response = await text_api(prompt +  history)
+        update_message_history(channel_id, "[model]: " + response)
+    else:
+        print("無工具結果，直接返回原始回應")
+
+    return response
 # ==================================================
 
 log: dict[int, list[str]] = {} # 創建一個名稱叫 log 的字典, 用來存放短期記憶
@@ -176,70 +265,102 @@ async def reset(ctx: commands.Context, channel: discord.abc.Messageable = None):
         await ctx.reply('並無儲存的短期記憶。', mention_author=False)
 # ==================================================        
 
+import os
+
 @bot.listen('on_message')
-async def when_someone_send_somgthing(msg: discord.Message): # 如果有訊息發送就會觸發
+async def handle_message(msg: discord.Message):
+    if msg.author == bot.user:
+        return
+
     command_name = msg.content.removeprefix(PREFIX)
-    if (command_name in [cmd.name for cmd in bot.commands]) or msg.author == bot.user: return
+    if (command_name in [cmd.name for cmd in bot.commands]):
+        return
+
     if not isinstance(msg.channel, discord.DMChannel):
-        can_send = msg.channel.permissions_for(msg.guild.me).send_messages # can_send 用來檢查頻道是否有發言權限
-        if not can_send: # 如果機器人沒有發言權限
+        can_send = msg.channel.permissions_for(msg.guild.me).send_messages
+        if not can_send:
             print(f'沒有權限在此頻道 ({msg.channel.name}) 發言。')
             return 
 
     result = load_channel_data(msg.channel)
     channel_id, channel_list = result[0], result[1]
+    if ((MODE == 'whitelist' and channel_id not in channel_list) or 
+        (MODE == 'blacklist' and channel_id in channel_list)) and not isinstance(msg.channel, discord.DMChannel):
+        return
 
-    if ((MODE == 'whitelist' and channel_id not in channel_list) or (MODE == 'blacklist' and channel_id in channel_list)) and not isinstance(msg.channel, discord.DMChannel): return # 判斷頻道 id 是否在 channel_list 裡面
     async with msg.channel.typing():
-        if msg.attachments: # 如果訊息中有檔案
-            for attachment in msg.attachments: # 遍歷訊息中檔案
-                if any(attachment.filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp']): # 檢測副檔名
+        attachment_info = None
+
+        # 處理圖片與文字檔附件
+        if msg.attachments:
+            for attachment in msg.attachments:
+                filename = attachment.filename.lower()
+
+                # 圖片處理
+                if any(filename.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp']):
                     async with aiohttp.ClientSession() as session:
-                        async with session.get(attachment.url) as resp: # 讀取圖片的 url 並將他用 aiohttp 函式庫轉換成數據
+                        async with session.get(attachment.url) as resp:
                             if resp.status != 200:
-                                await msg.reply('圖片載入失敗。', mention_author=False) # 如果圖片分析失敗就不再執行下方程式
+                                await msg.reply('圖片載入失敗。', mention_author=False)
                                 return
-
                             print(f'正在分析 {msg.author.name} 的圖片...')
-                            image_data = await resp.read() # 定義 image_data 為 aiohttp 回應的數據
-                            dc_msg = format_discord_message(msg.content) # 格式化訊息
-                            response_text = await image_api(image_data) # 用 image_api 函式來發送圖片數據跟文字給 api
-                            update_message_history(msg.channel.id,f"[{msg.author.name}]:{msg.content}(附上一張圖片，內容是「{response_text}」)")
-                            reply_text = await text_api(prompt + get_message_history(msg.channel.id))
-                            await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none())
-                            print(msg.author.name + ":" + msg.content + "\n" + reply_text)
-                            return
+                            image_data = await resp.read()
+                            response_text = await image_api(image_data)
+                            attachment_info = f"(附上一張圖片，內容是「{response_text}」)"
 
-        # 通過爬蟲來獲取網址網站標題, 進行簡單的連結判讀
+                # 純文字檔處理
+                elif any(filename.endswith(ext) for ext in ['.txt', '.md', '.log']):
+                    file_path = f"temp_{msg.id}_{filename}"
+                    async with aiohttp.ClientSession() as session:
+                        async with session.get(attachment.url) as resp:
+                            if resp.status != 200:
+                                await msg.reply('文字檔案載入失敗。', mention_author=False)
+                                return
+                            f = await aiofiles.open(file_path, mode='wb')
+                            await f.write(await resp.read())
+                            await f.close()
+                    try:
+                        f = await aiofiles.open(file_path, mode='r', encoding='utf-8', errors='ignore')
+                        text_data = await f.read()
+                        await f.close()
+                        print(f'使用者上傳的文字檔內容:\n{text_data[:500]}')
+                        attachment_info = f"(附上一個文字檔，內容是「{text_data[:300]}...」)"
+                    finally:
+                        if os.path.exists(file_path):
+                            os.remove(file_path)
+
+        # 處理網址
+        word = msg.content
         links = islink(msg.content)
-        if links: # 如果訊息內容有連結
-            word = ""
+        if links:
             for link in links:
-                title = gettitle(link) # 取得連結中的 title
-                word += msg.content.replace(link, f'(一個網址, 網址標題是: "{title}")\n' if title else '(一個網址, 網址無法辨識)\n')
-            update_message_history(msg.channel.id, f'[{msg.author.name}]:{word}')
-            reply_text = await text_api(prompt + get_message_history(msg.channel.id))
-            await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none())
-            print(msg.author.name + ":" + msg.content + "\n" + reply_text)
-            return
+                title = gettitle(link)
+                word = word.replace(link, f'(一個網址, 網址標題是: "{title}")\n' if title else '(一個網址, 網址無法辨識)\n')
 
-    # 就是 print 出來訊息的詳細資料, 可以不用加
-    # ==========================================
-    print(f'Server name: {msg.guild.name if not isinstance(msg.channel, discord.DMChannel) else "私訊"}')
-    print(f'Message ID: {msg.id}')
-    print(f'Message Content: {msg.content}')
-    print(f'Author ID: {msg.author.id}')
-    print(f'Author Name: {msg.author.name}')
-    if not isinstance(msg.channel, discord.DMChannel):
-        print(f'Channel name: {msg.channel.name}')
-        print(f'Channel id: {msg.channel.id}')
-    # ==========================================
+        if attachment_info:
+            word += f"\n{attachment_info}"
 
-    dc_msg = format_discord_message(msg.content) # 將訊息內容放入 format_discord_message, 簡單來說就是更改訊息的格式, 然後把回傳結果放入 dc_msg 變數
-    update_message_history(msg.channel.id, f'{msg.author.name}: ' + dc_msg) # 將 dc_msg (就是使用者發送的訊息) 上傳到短期記憶
-    reply_text = await text_api(prompt + (get_message_history(msg.channel.id) if (msg.channel.id) in log else msg.content))
+        dc_msg = format_discord_message(word)
+        update_message_history(msg.channel.id, f"[{msg.author.name}]:{dc_msg}")
+        reply_text = await text_api(prompt + get_message_history(msg.channel.id))
 
-    await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none()) # 將回應回傳給使用者
-    update_message_history(msg.channel.id, f'[model]:' + reply_text) # 將 api 的回應上傳到短期記憶
+        # 根據環境變數決定是否要處理工具
+        if os.getenv("CALL_TOOLS", "false").lower() == "true":
+            reply_text = await process_tools_in_response(msg.channel.id, reply_text)
+
+        await msg.reply(reply_text.replace("[model]:", ""), mention_author=False, allowed_mentions=discord.AllowedMentions.none())
+        update_message_history(msg.channel.id, f"[model]:" + reply_text)
+
+        # 除錯印出
+        print(f'Server name: {msg.guild.name if not isinstance(msg.channel, discord.DMChannel) else "私訊"}')
+        print(f'Message ID: {msg.id}')
+        print(f'Message Content: {msg.content}')
+        print(f'Author ID: {msg.author.id}')
+        print(f'Author Name: {msg.author.name}')
+        if not isinstance(msg.channel, discord.DMChannel):
+            print(f'Channel name: {msg.channel.name}')
+            print(f'Channel id: {msg.channel.id}')
+        print("附件摘要:", attachment_info)
+        print("模型回覆:\n", reply_text)
 
 bot.run(TOKEN)

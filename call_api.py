@@ -40,9 +40,14 @@ model = genai.GenerativeModel(model_name='gemini-1.5-flash', generation_config=g
 
 image_model = genai.GenerativeModel(model_name='gemini-1.5-pro', generation_config=generation_config, safety_settings=safety_settings) # 定義另外一個 model 用來生成圖片回應 (兩者不能相容)
 
-prompt = """
 
-"""
+if os.getenv("CALL_TOOLS", "false").lower() == "false":
+    with open("prompt.txt", "r", encoding="utf-8") as f:
+        prompt = f.read()
+else:
+    with open("manual.txt", "r", encoding="utf-8") as f:
+        with open("prompt.txt", "r", encoding="utf-8") as f2:
+            prompt = f2.read()+ f.read()
 
 #==============================================================
 
@@ -51,13 +56,13 @@ async def text_api(msg: str) -> str | None:
     呼叫 api 並回傳他的回應
     '''
     convo = model.start_chat(history=[
+        #==========================================
         # 這裡放你的 history / put your history here
+        #==========================================
     ])
 
     if not msg: return '這段訊息是空的'
-
     await convo.send_message_async(msg) # 傳送 msg 內容給 Gemini api
-    print(":",convo.last.text) # print 出 api 的回應 (可省略)
     return convo.last.text # 將 api 的回應返還給主程式
 
 async def image_api(image_data) -> str:
