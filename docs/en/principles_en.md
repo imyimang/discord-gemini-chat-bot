@@ -8,8 +8,5 @@ When a user sends a message, the message is stored in a dictionary with the chan
 
 **It's not long-term memory; the data in memory will disappear once the system restarts.**
 
-## Flowchart
-![alt text](../images/12.jpg)
-
 > [!WARNING]  
 > Once the number of servers reaches a certain threshold, blacklist mode may cause on_message detection to become very slow, and it may even miss detections.
