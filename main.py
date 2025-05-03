@@ -40,26 +40,32 @@ def get_message_history(channel_id: int) -> str | None:
     if channel_id in log: # 如果 channel_id 有在 log 字典裏面
         return '\n\n'.join(log[channel_id])
 
-def load_channel_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:
-    '''
-    讀取並回傳資料
-    '''
-    with open('channel.json', 'r', encoding='utf-8') as file: # 打開 json 檔案
-        data: dict = json.load(file)
-
-    if 'id' not in data:
-        data['id'] = []
-        save_data(data, "channel")
-
-    channel_list: list = data['id'] # 定義 channel_list 為 json 裡面鍵值為 'id' 的資料
-
+def load_channel_data(channel: discord.abc.GuildChannel) -> tuple[str, list]:  
+    '''  
+    讀取並回傳資料  
+    '''  
+    current_dir = os.path.dirname(__file__)  
+    channel_path = os.path.join(current_dir, 'channel.json')  
+      
+    with open(channel_path, 'r', encoding='utf-8') as file: # 打開 json 檔案  
+        data: dict = json.load(file)  
+  
+    if 'id' not in data:  
+        data['id'] = []  
+        save_data(data, "channel")  
+  
+    channel_list: list = data['id'] # 定義 channel_list 為 json 裡面鍵值為 'id' 的資料  
+  
     return str(channel.id), channel_list, data
 
-def save_data(data: dict, data_file: str):
-    '''
-    儲存檔案
-    '''
-    with open(f'{data_file}.json', 'w', encoding='utf-8') as file:
+def save_data(data: dict, data_file: str):  
+    '''  
+    儲存檔案  
+    '''  
+    current_dir = os.path.dirname(__file__)  
+    file_path = os.path.join(current_dir, f'{data_file}.json')  
+      
+    with open(file_path, 'w', encoding='utf-8') as file:  
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 def extract_json_block(text):
