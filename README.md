@@ -52,7 +52,6 @@ pip install -U -r requirements.txt
 - [如何撰寫提示詞?](docs/zh/q7.md)
 - [如何產生訓練用的history?](docs/zh/q3.md)
 - [Error:The caller does not have permisson](docs/zh/q4.md)
-- [Error:No such file or directory: 'config.json/channel.json'](docs/zh/q5.md)
 - [Gemini 不同模型的選擇](docs/zh/q6.md)
 
 

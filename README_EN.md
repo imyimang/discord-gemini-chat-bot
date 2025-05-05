@@ -52,7 +52,6 @@ Run `main.py`
 - [How to write prompts?](docs/en/q7_en.md)
 - [How to generate training history?](docs/en/q3_en.md)
 - [Error: The caller does not have permission](docs/en/q4_en.md)
-- [Error: No such file or directory: 'config.json/channel.json'](docs/en/q5_en.md)
 - [Different Gemini model options](docs/en/q6_en.md)
 
 # References
