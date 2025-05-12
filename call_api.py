@@ -37,16 +37,16 @@ safety_settings = [
 
 model = genai.GenerativeModel(model_name='gemini-1.5-flash', generation_config=generation_config, safety_settings=safety_settings) # 設定模型, 這邊不用動他
 
-image_model = genai.GenerativeModel(model_name='gemini-1.5-pro', generation_config=generation_config, safety_settings=safety_settings) # 定義另外一個 model 用來生成圖片回應 (兩者不能相容)
+image_model = genai.GenerativeModel(model_name='gemini-1.5-flash', generation_config=generation_config, safety_settings=safety_settings) # 定義另外一個 model 用來生成圖片回應 (兩者不能相容)
 
 
 if os.getenv("CALL_TOOLS", "false").lower() == "false":
     with open("prompt.txt", "r", encoding="utf-8") as f:
         prompt = f.read()
 else:
-    with open("manual.txt", "r", encoding="utf-8") as f:
-        with open("prompt.txt", "r", encoding="utf-8") as f2:
-            prompt = f2.read()+ f.read()
+    with open("prompt.txt", "r", encoding="utf-8") as f:
+        with open("manual.txt", "r", encoding="utf-8") as f2:
+            prompt = f.read()+ f2.read()
 
 #==============================================================
 
